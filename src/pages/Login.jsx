@@ -51,7 +51,7 @@ export function Login() {
             // const response2 = await api.auth.login(data)
             // console.log(response2)
             //let auth_response = await api.movies.read_all()
-            let response_free = await axios.get('http://localhost:3000/', {
+            let response_free = await axios.get('https://movie-app-backend-d7yq.onrender.com/'/*'http://localhost:3000/'*/, {
                 
                 headers: {
                     withCredentials: true
