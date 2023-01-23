@@ -29,6 +29,10 @@ export function Landing() {
         expirationDate.setHours(expirationDate.getHours() + 24);
         cookies.set("Name", "pls idek", {sameSite: 'strict', path: '/', expires: expirationDate})
     }
+    const test3 = async () => {
+        const res = await axios.get('/api/v1')
+        console.log(res)
+    }
     
     return (
     <>
