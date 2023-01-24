@@ -1,5 +1,5 @@
 const express = require("express"),
-PORT = 5000,
+PORT = 3000,
 app = express();
 
 app.get("/api/v1", (req, res) => {
