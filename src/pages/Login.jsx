@@ -57,7 +57,7 @@ export function Login() {
                     withCredentials: true
                 }
             });
-            let response_proxy = await axios.get('/auth/login'/*'http://localhost:3000/'*/, {
+            let response_proxy = await axios.post('/auth/login'/*'http://localhost:3000/'*/, {data}, {
                 headers: {
                     withCredentials: true
                 }
