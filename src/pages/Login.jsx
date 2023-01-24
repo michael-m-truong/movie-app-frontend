@@ -65,7 +65,9 @@ export function Login() {
             console.log(response_proxy2)
             let response_proxy = await axios.post('/auth/login'/*'http://localhost:3000/'*/, data, {
                 headers: {
-                    withCredentials: true
+                    withCredentials: true,
+                    'Accept': "application/json",
+                    'content-type': 'application/json',
                 }
             });
             console.log(response_proxy)
