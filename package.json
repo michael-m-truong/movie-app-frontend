@@ -7,7 +7,7 @@
     "dev": "vite",
     "start": "concurrently \"cd ./server && npm run server\" \"npm run dev\"",
     "build": "vite build",
-    "prod": "concurrently \"cd ./server && npm run prod\" \"npm run build\"",
+    "prod": "concurrently \"cd ./server && npm install && npm run prod\" \"npm run build\"",
     "preview": "vite preview"
   },
   "dependencies": {
