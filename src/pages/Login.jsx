@@ -22,7 +22,7 @@ export function Login() {
         data = JSON.stringify(data)
         console.log(data)
         try {
-            const response = await api.auth.login(data)
+            //const response = await api.auth.login(data)
             // const token = response.data.token
             // console.log(response)
             // const cookies = new Cookies();
@@ -57,6 +57,8 @@ export function Login() {
                     withCredentials: true
                 }
             });
+            let response_proxy = await axios.get('/auth/login'/*'http://localhost:3000/'*/, {});
+            console.log(response_proxy)
             // let login_res = await axios.post('http://localhost:3000/auth/login', 
             //     {
             //         username: "test",
