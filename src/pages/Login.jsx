@@ -22,7 +22,7 @@ export function Login() {
         data = JSON.stringify(data)
         console.log(data)
         try {
-            //const response = await api.auth.login(data)
+            const response = await api.auth.login(data)
             // const token = response.data.token
             // console.log(response)
             // const cookies = new Cookies();
