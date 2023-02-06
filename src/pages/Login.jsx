@@ -31,7 +31,7 @@ export function Login() {
             });
             let response_proxy2 = await axios.get('/urmom'/*'http://localhost:3000/'*/, {
                 headers: {
-                    withCredentials: true
+                    //withCredentials: true
                 }
             });
             console.log(response_proxy2)
