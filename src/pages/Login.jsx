@@ -23,34 +23,6 @@ export function Login() {
         console.log(data)
         try {
             const response = await api.auth.login(data)
-            // const token = response.data.token
-            // console.log(response)
-            // const cookies = new Cookies();
-            // const expirationDate = new Date();
-            // expirationDate.setHours(expirationDate.getHours() + 24);
-            // cookies.set("TOKEN", token, {
-            //     path: "/",
-            //     //expires: expirationDate,
-            //     sameSite: "None",
-            //     secure: false,
-            //     httpOnly: true
-            // })
-            // cookies.set("weird", token, {
-            //     path: "/",
-            //     //expires: expirationDate,
-            //     sameSite: false,
-            //     secure: false,
-            //     httpOnly: true
-            // })
-            // cookies.set("urmom", token, {
-            //     path: "/",
-            //     //expires: expirationDate,
-            //     //httpOnly: true
-            // })
-            console.log("hi")
-            // const response2 = await api.auth.login(data)
-            // console.log(response2)
-            //let auth_response = await api.movies.read_all()
             let response_free = await axios.get('https://movie-app-backend-d7yq.onrender.com/'/*'http://localhost:3000/'*/, {
                 
                 headers: {
@@ -71,16 +43,6 @@ export function Login() {
                 }
             });
             console.log(response_proxy)
-            // let login_res = await axios.post('http://localhost:3000/auth/login', 
-            //     {
-            //         username: "test",
-            //         password: "cottonball123"
-            //     },
-            //     {
-            //     headers: {
-            //         withCredentials: true
-            //     }
-            // });
             let auth_response = await api.movies.read_all()  // use this
             console.log(response_free)
             console.log(auth_response)
