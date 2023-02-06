@@ -6,8 +6,7 @@ export const instance = axios.create({
     //baseURL: "https://movie-app-backend-d7yq.onrender.com",
     //baseURL: "http://localhost:3000",
     //url: "auth/user",
-    //method: "post",
-    withCredentials: true,
+    //withCredentials: true,
     headers: {
         //Authorization: `Bearer ${token}`,
         'Accept': "application/json",
