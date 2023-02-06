@@ -22,7 +22,7 @@ const ProtectedRoutes = () => {
     useEffect(() => {
         useAuth().then(isLoggedIn => {
             setIsAuth(isLoggedIn);
-            console.log("HEREEEE")
+            console.log("HEREEEE PROTECTED")
             console.log(isLoggedIn)
         });
     }, []);

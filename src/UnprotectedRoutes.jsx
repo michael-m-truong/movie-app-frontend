@@ -22,7 +22,7 @@ const UnprotectedRoutes = () => {
     useEffect(() => {
         useAuth().then(isLoggedIn => {
             setIsAuth(isLoggedIn);
-            console.log("HEREEEE")
+            console.log("HEREEEE UNPROTECTED")
             console.log(isLoggedIn)
         });
     }, []);

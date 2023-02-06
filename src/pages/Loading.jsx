@@ -1,11 +1,11 @@
 import React from "react";
+import { Link, Route, Routes } from "react-router-dom"
 
 const Loading = () => {
-//   return (
-//     <div>
-//       <h2>Loading...</h2>
-//     </div>
-//   );
+  return (
+    <>
+    </>
+  );
 };
 
 export default Loading;

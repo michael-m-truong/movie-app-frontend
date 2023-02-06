@@ -4,6 +4,7 @@ import { Landing } from "./Landing"
 import { api } from "../axios/axiosConfig"
 import { useState, useEffect, useRef } from "react";
 import Loading from "./Loading";
+import { Suspense} from "react";
 
 const useAuth = async () => {
     let response;
@@ -19,17 +20,31 @@ const useAuth = async () => {
     return user && user.loggedIn;
 }
 
-export function Base() {
+export function Base({authUser}) {
     const [isAuth, setIsAuth] = useState(null);
+    // useEffect(() => {
+    //     useAuth().then(isLoggedIn => {
+    //         setIsAuth(isLoggedIn);
+    //         console.log("HEREEEE")
+    //         console.log(isLoggedIn)
+    //     });
+    // }, []);
+    // console.log("renders")
+
     useEffect(() => {
-        useAuth().then(isLoggedIn => {
-            setIsAuth(isLoggedIn);
-            console.log("HEREEEE")
-            console.log(isLoggedIn)
-        });
-    }, []);
-    console.log("renders")
-    if (isAuth === null) return;
-    return isAuth ? <Home /> : <Landing /> ;
+        (async function () {
+        try {
+            await authUser()
+            setIsAuth(true)
+        } catch (e) {
+            console.log(e)
+            setIsAuth(false)
+        }
+        })()
+    }, [])
+    if (isAuth == null) return 
+    return (
+        isAuth ? <Home /> : <Landing />
+    )
     //return <h1>hi</h1>
 }

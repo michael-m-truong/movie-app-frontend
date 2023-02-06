@@ -9,20 +9,32 @@ import { Landing } from "./pages/Landing"
 import { Base } from "./pages/Base"
 import ProtectedRoutes from './ProtectedRoutes'
 import UnprotectedRoutes from './UnprotectedRoutes'
+import { api } from './axios/axiosConfig'
+
+async function authUser() {
+  try {
+    let auth_response = await api.movies.read_all()
+    console.log('auth test')
+  }
+  catch (error) {
+    console.log('throws')
+    throw {
+      error
+    }
+  }
+}
 
 function App() {
   return (
   <>
   <Routes>
-  <Route path="/" element={<Base />}/>
-    <Route element={<UnprotectedRoutes/>} >
+  <Route path="/" element={<Base authUser={authUser}/>}/>
+    
       <Route path="/login" element={<Login />}/>
       <Route path="/register" element={<Register />}/>
-    </Route>
-    <Route element={<ProtectedRoutes/>} >
-      <Route path="/movies" element={<Movies />}/>
-      <Route path="/logout" element={<Logout />}/>
-    </Route>
+   
+      <Route path="/movies" element={<Movies authUser={authUser} />} />
+      <Route path="/logout" element={<Logout authUser={authUser} />} />
   </Routes>
   </>
   )
