@@ -37,7 +37,7 @@ export function Landing() {
     return (
     <>
     <h1>Movie App</h1>
-    <Button variant="primary" size="lg" id="register" className="form" onClick={()=>test3()}>
+    <Button variant="primary" size="lg" id="register" className="form" onClick={()=>navigate("/register")}>
         Register
     </Button>
     <Button variant="primary" size="lg" id="login" className="form" onClick={()=>navigate("/login")}>

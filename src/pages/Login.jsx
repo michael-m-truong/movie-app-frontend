@@ -34,6 +34,7 @@ export function Login() {
             let auth_response = await api.movies.read_all()  // use this
             console.log(auth_response)
             setLoginCheck("Login successful")
+            navigate("/")
             
         }
         catch (e) {
