@@ -23,28 +23,15 @@ export function Login() {
         console.log(data)
         try {
             const response = await api.auth.login(data)
-            let response_free = await axios.get('https://movie-app-backend-d7yq.onrender.com/'/*'http://localhost:3000/'*/, {
-                
-                headers: {
-                    withCredentials: true
-                }
-            });
-            let response_proxy2 = await axios.get('/urmom'/*'http://localhost:3000/'*/, {
-                headers: {
-                    //withCredentials: true
-                }
-            });
-            console.log(response_proxy2)
-            let response_proxy = await axios.post('/auth/login'/*'http://localhost:3000/'*/, data, {
-                headers: {
-                    withCredentials: true,
-                    'Accept': "application/json",
-                    'content-type': 'application/json',
-                }
-            });
-            console.log(response_proxy)
+            // let response_proxy = await axios.post('/auth/login'/*'http://localhost:3000/'*/, data, {
+            //     headers: {
+            //         withCredentials: true,
+            //         'Accept': "application/json",
+            //         'content-type': 'application/json',
+            //     }
+            // });
+            // console.log(response_proxy)
             let auth_response = await api.movies.read_all()  // use this
-            console.log(response_free)
             console.log(auth_response)
             setLoginCheck("Login successful")
             

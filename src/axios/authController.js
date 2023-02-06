@@ -7,3 +7,11 @@ export const loginService = (data) => instance.post(
     //     withCredentials: true
     // }
 )
+
+export const registerService = (data) => instance.post(
+    "auth/register",
+    data  // passed into body
+    // {
+    //     withCredentials: true
+    // }
+)
