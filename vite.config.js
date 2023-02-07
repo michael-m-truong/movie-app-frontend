@@ -7,6 +7,7 @@ export default defineConfig({
     proxy: {
       "/auth/login": "http://localhost:3000",
       "/auth/register": "http://localhost:3000",
+      "/auth/isLoggedIn": "http://localhost:3000",
       "/movies/read-all": "http://localhost:3000",
     },
   },

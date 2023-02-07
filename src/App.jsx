@@ -13,7 +13,7 @@ import { api } from './axios/axiosConfig'
 
 async function authUser() {
   try {
-    let auth_response = await api.movies.read_all()
+    let auth_response = await api.auth.isLoggedIn()
     console.log('auth test')
   }
   catch (error) {

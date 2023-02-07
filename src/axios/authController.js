@@ -15,3 +15,11 @@ export const registerService = (data) => instance.post(
     //     withCredentials: true
     // }
 )
+
+export const isLoggedInService = (data) => instance.post(
+    "auth/isLoggedIn",
+    data  // passed into body
+    // {
+    //     withCredentials: true
+    // }
+)
