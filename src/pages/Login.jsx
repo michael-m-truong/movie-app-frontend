@@ -6,6 +6,7 @@ import { useState } from "react";
 import { api } from '../axios/axiosConfig';
 import Cookies from "universal-cookie";
 import axios from 'axios';
+import { store } from '../App';
 
 export function Login() {
 
@@ -34,6 +35,7 @@ export function Login() {
             let auth_response = await api.movies.read_all()  // use this
             console.log(auth_response)
             setLoginCheck("Login successful")
+            store.dispatch({ type: "LOGGED_IN"})
             navigate("/")
             
         }

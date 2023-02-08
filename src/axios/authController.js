@@ -1,5 +1,13 @@
 import { instance, api } from "./axiosConfig"
 
+export const registerService = (data) => instance.post(
+    "auth/register",
+    data  // passed into body
+    // {
+    //     withCredentials: true
+    // }
+)
+
 export const loginService = (data) => instance.post(
     "auth/login",
     data  // passed into body
@@ -8,8 +16,8 @@ export const loginService = (data) => instance.post(
     // }
 )
 
-export const registerService = (data) => instance.post(
-    "auth/register",
+export const logoutService = (data) => instance.post(
+    "auth/logout",
     data  // passed into body
     // {
     //     withCredentials: true

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { isLoggedInService, loginService, registerService, } from "./authController";
+import { isLoggedInService, loginService, registerService, logoutService} from "./authController";
 import { read_allService } from "./moviesController";
 
 export const instance = axios.create({
@@ -16,8 +16,9 @@ export const instance = axios.create({
 
 export const api = {
     auth: {
-        login: loginService,
         register: registerService,
+        login: loginService,
+        logout: logoutService,
         isLoggedIn: isLoggedInService
     },
     movies: {

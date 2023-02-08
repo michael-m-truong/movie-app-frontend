@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.9.2",
     "axios": "^1.2.3",
     "bootstrap": "^5.2.3",
     "concurrently": "^7.6.0",
@@ -16,7 +17,10 @@
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.0",
     "react-dom": "^18.2.0",
+    "react-redux": "^8.0.5",
     "react-router-dom": "^6.6.2",
+    "redux": "^4.2.1",
+    "redux-thunk": "^2.4.2",
     "universal-cookie": "^4.0.4"
   },
   "devDependencies": {

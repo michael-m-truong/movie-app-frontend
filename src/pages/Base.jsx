@@ -6,22 +6,27 @@ import { useState, useEffect, useRef } from "react";
 import Loading from "./Loading";
 import { Suspense} from "react";
 
-const useAuth = async () => {
-    let response;
-    let user;
-    try {
-        response = await api.movies.read_all()
-        user = {loggedIn: true};
-    }
-    catch (e) {
-        user = {loggedIn: false};
-    }
-    console.log(user)
-    return user && user.loggedIn;
-}
+import { useSelector } from 'react-redux';
+
+
+// const useAuth = async () => {
+//     let response;
+//     let user;
+//     try {
+//         response = await api.movies.read_all()
+//         user = {loggedIn: true};
+//     }
+//     catch (e) {
+//         user = {loggedIn: false};
+//     }
+//     console.log(user)
+//     return user && user.loggedIn;
+// }
 
 export function Base({authUser}) {
-    const [isAuth, setIsAuth] = useState(null);
+    const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+    console.log(isLoggedIn)
+    //const [isAuth, setIsAuth] = useState(null);
     // useEffect(() => {
     //     useAuth().then(isLoggedIn => {
     //         setIsAuth(isLoggedIn);
@@ -31,20 +36,20 @@ export function Base({authUser}) {
     // }, []);
     // console.log("renders")
 
-    useEffect(() => {
-        (async function () {
-        try {
-            await authUser()
-            setIsAuth(true)
-        } catch (e) {
-            console.log(e)
-            setIsAuth(false)
-        }
-        })()
-    }, [])
-    if (isAuth == null) return 
+    // useEffect(() => {
+    //     (async function () {
+    //     try {
+    //         await authUser()
+    //         setIsAuth(true)
+    //     } catch (e) {
+    //         console.log(e)
+    //         setIsAuth(false)
+    //     }
+    //     })()
+    // }, [])
+    if (isLoggedIn == null) return 
     return (
-        isAuth ? <Home /> : <Landing />
+        isLoggedIn ? <Home /> : <Landing />
     )
     //return <h1>hi</h1>
 }

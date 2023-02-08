@@ -5,8 +5,9 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   server: {
     proxy: {
-      "/auth/login": "http://localhost:3000",
       "/auth/register": "http://localhost:3000",
+      "/auth/login": "http://localhost:3000",
+      "/auth/logout": "http://localhost:3000",
       "/auth/isLoggedIn": "http://localhost:3000",
       "/movies/read-all": "http://localhost:3000",
     },
