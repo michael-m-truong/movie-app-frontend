@@ -13,6 +13,7 @@ import { styled } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 import { Movies } from "./Movies";
 import { Navbar } from "./Navbar";
+import { Header } from "./Header";
 
 
 const useAuth = async () => {
@@ -41,18 +42,17 @@ export function Base({authUser}) {
     const isLoggedIn = useSelector(state => state.user.isLoggedIn);
     console.log(isLoggedIn)
 
-    if (isLoggedIn == null) return 
     return (
-
+      <>
       <Grid container spacing={2}>
         <Grid item xs={2.5}>
-          <Navbar/>
+          <Navbar isLoggedIn={isLoggedIn}/>
         </Grid>
         <Grid item xs={9.5}>
           <Movies/>
         </Grid>
       </Grid>
-
+      </>
         // isLoggedIn ? <Home /> : <Landing />
     )
     //return <h1>hi</h1>

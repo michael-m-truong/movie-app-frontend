@@ -1,6 +1,6 @@
 import { Link, Route, Routes, useNavigate } from "react-router-dom"
 import Button from 'react-bootstrap/Button';
-import '../assets/Form.css'
+import '../assets/css/Form.css'
 import axios from "axios";
 import Cookies from "universal-cookie";
 

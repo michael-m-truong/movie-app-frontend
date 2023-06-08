@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../assets/navbar.css";
+import "../assets/css/navbar.css";
+import { store } from '../App';
 
-export function Navbar() {
+export function Navbar({ isLoggedIn }) {
   return (
     <div className="navbar">
       <ul className="nav-list">
@@ -26,7 +27,44 @@ export function Navbar() {
             My Favorites
           </Link>
         </li>
+        {isLoggedIn ? (
+          <AuthenticatedLinks />
+        ) : (
+          <UnauthenticatedLinks />
+        )}
       </ul>
     </div>
   );
 }
+
+const AuthenticatedLinks = () => (
+  <li className="nav-item nav-link" onClick={logout}>
+    Signout
+    {/* <Link to="/logout" className="nav-link">
+      Sign Out
+    </Link> */}
+  </li>
+);
+
+const UnauthenticatedLinks = () => (
+  <>
+    <li className="nav-item">
+      <Link to="/login" className="nav-link">
+        Log In
+      </Link>
+    </li>
+    <li className="nav-item">
+      <Link to="/register" className="nav-link">
+        Register
+      </Link>
+    </li>
+  </>
+);
+
+
+const logout = async () => {
+    await store.dispatch({ type: "LOGGED_OUT"})
+    await api.auth.logout()
+}
+
+

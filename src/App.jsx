@@ -1,4 +1,4 @@
-import './assets/App.css'
+import './assets/css/App.css'
 import { Link, Route, Routes } from "react-router-dom"
 import { Home } from "./pages/Home"
 import { Login } from "./pages/Login"
@@ -17,6 +17,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import rootReducer from './reducers/rootReducer'
 import { useEffect } from 'react'
 import { Provider } from 'react-redux'
+import { Header } from './pages/Header'
 
 async function authUser(dispatch) {
   try {
@@ -40,7 +41,7 @@ const store = configureStore({
 function App() {
 
   useEffect(() => {
-
+    window.history.scrollRestoration = 'manual';
     // Dispatch an action to fetch data from an API and populate the store
     const checkLoggedIn = async () => {
       try {
@@ -55,6 +56,7 @@ function App() {
 
   return (
     <>
+    <Header></Header>
     <Provider store={store}>
     <Routes>
     <Route path="/" element={<Base authUser={authUser}/>}/>

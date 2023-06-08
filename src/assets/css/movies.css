@@ -102,19 +102,28 @@
     animation: fade-in 0.2s ease-in;
   }
   
-  .modal button {
-    background-color: #ccc;
+  .modal-action-button {
+    
     padding: 5px 10px;
     border: none;
     cursor: pointer;
+    z-index: 3;
+    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  }
+
+  .modal-actions {
     z-index: 2;
   }
 
   .modal-close {
-    background-color: #ccc;
+    background-color: transparent;
     padding: 5px 10px;
     border: none;
     cursor: pointer;
     z-index: 2;
+    color: white;
+    margin-left: auto;
+    width: 30px;
+    font-size: 20px;
   }
   

@@ -1,7 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import axios from "axios";
-import "../assets/movies.css";
+import "../assets/css/movies.css";
+import Button from '@mui/material/Button';
+import Rating from '@mui/material/Rating';
+import Box from '@mui/material/Box';
+import StarIcon from '@mui/icons-material/Star';
 
 
 // Define the genre mappings
@@ -31,6 +35,8 @@ export function Movies() {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const modalRef = useRef(null);
+  const [value, setValue] = useState(null);
+  const [hover, setHover] = useState(-1);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,6 +62,10 @@ export function Movies() {
 
     fetchData();
   }, []);
+
+  const getLabelText = (value) => {
+    return `${value} Star${value !== 1 ? 's' : ''}`;
+  };
 
   const getGenreNames = (genreIds) => {
     return genreIds
@@ -97,14 +107,19 @@ export function Movies() {
       </div>
 
       {selectedMovie && (
-        <div className="modal" onClick={closeModal} id="mod">
-          <div className="modal-content" ref={modalRef} onClick={(e) => e.stopPropagation()} 
-          style={{ backgroundImage: `url(https://image.tmdb.org/t/p/original/${selectedMovie.backdrop_path})`, 
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          position: "relative",
-          }}>
-            <div
+  <div className="modal" onClick={closeModal} id="mod">
+    <div
+      className="modal-content"
+      ref={modalRef}
+      onClick={(e) => e.stopPropagation()}
+      style={{
+        backgroundImage: `url(https://image.tmdb.org/t/p/original/${selectedMovie.backdrop_path})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        position: "relative",
+      }}
+    >
+      <div
         className="modal-overlay"
         style={{
           backgroundColor: "rgba(0, 0, 0, 0.8)", // Adjust the alpha value as needed
@@ -113,27 +128,59 @@ export function Movies() {
           left: 0,
           width: "100%",
           height: "100%",
-          zIndex: 1
+          zIndex: 1,
         }}
       />
-          
-            <div className="movie-details">
-              <img
-                src={`https://image.tmdb.org/t/p/w500/${selectedMovie.poster_path}`}
-                alt={selectedMovie.title}
-                className="modal-poster"
-              />
-              <div className="movie-info">
-                <h2>{selectedMovie.title}</h2>
-                <p>{selectedMovie.overview}</p>
-                <p>Ratings: {selectedMovie.vote_average}</p>
-                <p>Genres: {getGenreNames(selectedMovie.genre_ids).join(", ")}</p>
-              </div>
-            </div>
-            <button className="modal-close" onClick={closeModal}>Close</button>
-          </div>
+
+      <button className="modal-close" onClick={closeModal}>
+        X
+      </button>
+
+      <div className="movie-details">
+        <img
+          src={`https://image.tmdb.org/t/p/w500/${selectedMovie.poster_path}`}
+          alt={selectedMovie.title}
+          className="modal-poster"
+        />
+        <div className="movie-info">
+          <h2>{selectedMovie.title}</h2>
+          <p>{selectedMovie.overview}</p>
+          <p>
+                  Your rating:
+                  <Rating
+                    name="hover-feedback"
+                    value={value}
+                    precision={0.1}
+                    getLabelText={getLabelText}
+                    max={10}
+                    onChange={(event, newValue) => {
+                      setValue(newValue);
+                    }}
+                    onChangeActive={(event, newHover) => {
+                      setHover(newHover);
+                    }}
+                    emptyIcon={
+                      <StarIcon style={{ opacity: 1. }} fontSize="inherit" />
+                    }
+                  />
+                  {value !== null && (
+                    <Box sx={{ ml: 2 }}>
+                      {getLabelText(hover !== -1 ? hover : value)}
+                    </Box>
+                  )}
+                </p>
+          <p>Critic ratings: {selectedMovie.vote_average}</p>
+          <p>Genres: {getGenreNames(selectedMovie.genre_ids).join(", ")}</p>
         </div>
-      )}
+      </div>
+
+      <div className="modal-actions">
+        <Button variant="contained" className="modal-action-button">Add to Watchlist</Button>
+        <Button variant="contained" className="modal-action-button">Favorite</Button>
+      </div>
+    </div>
+  </div>
+)}
     </>
   );
 }

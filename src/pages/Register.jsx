@@ -1,6 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import '../assets/Form.css'
+import '../assets/css/Form.css'
 import { useNavigate } from "react-router-dom"
 import { api } from '../axios/axiosConfig';
 import { useState } from "react";
@@ -33,6 +33,8 @@ export function Register() {
 
     return (
         <>
+        <div className="container">
+      <div className="form-container">
         <h1>Register</h1>
         <Form>
         <Form.Group className="mb-3">
@@ -52,6 +54,8 @@ export function Register() {
         </Button>
         </Form>
         <h2>{registerCheck}</h2>
+        </div>
+        </div>
         </>
     );
 }
