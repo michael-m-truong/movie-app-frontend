@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../assets/css/navbar.css";
 import { store } from '../App';
+import { api } from "../axios/axiosConfig";
 
 export function Navbar({ isLoggedIn }) {
   return (
