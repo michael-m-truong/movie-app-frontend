@@ -5,51 +5,55 @@ import { api } from "../axios/axiosConfig"
 import { useState, useEffect, useRef } from "react";
 import Loading from "./Loading";
 import { Suspense} from "react";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
 
 import { useSelector } from 'react-redux';
+import { Movies } from "./Movies";
+import { Navbar } from "./Navbar";
 
 
-// const useAuth = async () => {
-//     let response;
-//     let user;
-//     try {
-//         response = await api.movies.read_all()
-//         user = {loggedIn: true};
-//     }
-//     catch (e) {
-//         user = {loggedIn: false};
-//     }
-//     console.log(user)
-//     return user && user.loggedIn;
-// }
+const useAuth = async () => {
+    let response;
+    let user;
+    try {
+        response = await api.movies.read_all()
+        user = {loggedIn: true};
+    }
+    catch (e) {
+        user = {loggedIn: false};
+    }
+    console.log(user)
+    return user && user.loggedIn;
+}
+
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  }));
 
 export function Base({authUser}) {
     const isLoggedIn = useSelector(state => state.user.isLoggedIn);
     console.log(isLoggedIn)
-    //const [isAuth, setIsAuth] = useState(null);
-    // useEffect(() => {
-    //     useAuth().then(isLoggedIn => {
-    //         setIsAuth(isLoggedIn);
-    //         console.log("HEREEEE")
-    //         console.log(isLoggedIn)
-    //     });
-    // }, []);
-    // console.log("renders")
 
-    // useEffect(() => {
-    //     (async function () {
-    //     try {
-    //         await authUser()
-    //         setIsAuth(true)
-    //     } catch (e) {
-    //         console.log(e)
-    //         setIsAuth(false)
-    //     }
-    //     })()
-    // }, [])
     if (isLoggedIn == null) return 
     return (
-        isLoggedIn ? <Home /> : <Landing />
+
+      <Grid container spacing={2}>
+        <Grid item xs={2.5}>
+          <Navbar/>
+        </Grid>
+        <Grid item xs={9.5}>
+          <Movies/>
+        </Grid>
+      </Grid>
+
+        // isLoggedIn ? <Home /> : <Landing />
     )
     //return <h1>hi</h1>
 }

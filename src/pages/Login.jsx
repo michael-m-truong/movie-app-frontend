@@ -32,7 +32,7 @@ export function Login() {
             //     }
             // });
             // console.log(response_proxy)
-            let auth_response = await api.movies.read_all()  // use this
+            let auth_response = await api.auth.isLoggedIn()  // use this
             console.log(auth_response)
             setLoginCheck("Login successful")
             store.dispatch({ type: "LOGGED_IN"})

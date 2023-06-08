@@ -4,7 +4,6 @@ import '../assets/Form.css'
 import axios from "axios";
 import Cookies from "universal-cookie";
 
-axios.defaults.withCredentials = true
 
 export function Landing() {
 
