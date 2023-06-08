@@ -20,6 +20,40 @@
   }
   
 
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fade-in-details {
+    0% {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes fade-out {
+    0% {
+      opacity: 1;
+      transform: translateY(0);
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-20px);
+      background-color: rgba(248, 87, 87, 0);
+    }
+  }
 
   .modal-poster {
     width: 250px;
@@ -33,6 +67,7 @@
     align-items: center;
     color: white;
     z-index: 2;
+    animation: fade-in-details 0.2s ease-in;
   }
   
   .movie-info {
@@ -64,10 +99,18 @@
     /* background-color: white; */
     padding: 20px;
     max-width: 800px;
-    
+    animation: fade-in 0.2s ease-in;
   }
   
   .modal button {
+    background-color: #ccc;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  .modal-close {
     background-color: #ccc;
     padding: 5px 10px;
     border: none;

@@ -3,6 +3,7 @@ import { Link, Route, Routes } from "react-router-dom";
 import axios from "axios";
 import "../assets/movies.css";
 
+
 // Define the genre mappings
 const genreMappings = {
   28: "Action",
@@ -38,7 +39,7 @@ export function Movies() {
           "https://api.themoviedb.org/3/movie/now_playing",
           {
             headers: {
-              Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwZGQ5NTQyMTFkN2I4MGVhM2FlMmFlZjhlZDU3NTQ2OCIsInN1YiI6IjYxMTBiOWEwNGE1MmY4MDA1Y2M3MTMwYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EABEQGSe71SPwD2QSuf1sp3HgPk1CCavgemuXf6cxlg", // Replace with your actual bearer token
+              Authorization: `Bearer ${import.meta.env.VITE_READ_ACCESS_TOKEN}`, // Replace with your actual bearer token
             },
             params: {
               api_key: "YOUR_API_KEY", // Replace with your actual API key
@@ -67,7 +68,16 @@ export function Movies() {
   };
 
   const closeModal = () => {
+    const modalElement = modalRef.current;
+    const overlayElement = document.getElementById("mod")
+    console.log(overlayElement)
+  //modalElement.style.animation = "fade-out 0.175s ease-out";
+  overlayElement.style.animation = "fade-out 0.2s ease-out";
+    console.log(modalElement)
+  setTimeout(() => {
     setSelectedMovie(null);
+    modalElement.style.animation = "";
+  }, 160);
   };
 
   return (
@@ -76,9 +86,10 @@ export function Movies() {
         {movies.map((movie) => (
           <div key={movie.id} className="movie-card" onClick={() => openModal(movie)}>
             <img
-              src={`https://image.tmdb.org/t/p/w200/${movie.poster_path}`}
+              src={`https://image.tmdb.org/t/p/w400/${movie.poster_path}`}
               alt={movie.title}
               className="movie-poster"
+              width={200}
             />
             <h2 className="movie-title">{movie.title}</h2>
           </div>
@@ -86,7 +97,7 @@ export function Movies() {
       </div>
 
       {selectedMovie && (
-        <div className="modal" onClick={closeModal}>
+        <div className="modal" onClick={closeModal} id="mod">
           <div className="modal-content" ref={modalRef} onClick={(e) => e.stopPropagation()} 
           style={{ backgroundImage: `url(https://image.tmdb.org/t/p/original/${selectedMovie.backdrop_path})`, 
           backgroundSize: "cover",
