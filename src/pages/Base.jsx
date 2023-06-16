@@ -38,9 +38,10 @@ const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
   }));
 
-export function Base({authUser}) {
+export function Base({authUser, page}) {
     const isLoggedIn = useSelector(state => state.user.isLoggedIn);
-    console.log(isLoggedIn)
+    //console.log(isLoggedIn)
+    //console.log(page)
 
     return (
       <>
@@ -49,7 +50,7 @@ export function Base({authUser}) {
           <Navbar isLoggedIn={isLoggedIn}/>
         </Grid>
         <Grid item xs={9.5}>
-          <Movies/>
+          <Movies page={page}/>
         </Grid>
       </Grid>
       </>

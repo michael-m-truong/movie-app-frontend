@@ -33,6 +33,20 @@ async function authUser(dispatch) {
   }
 }
 
+async function getUserMovieData(dispatch) {
+  try {
+    let getUserMovieData_response = await api.movies.read_all()
+    console.log(getUserMovieData_response.data.user)
+    dispatch({ type: "INITIALIZE_FAVORITES", payload: Object.entries(getUserMovieData_response.data.user.favorites)})
+  }
+  catch (error) {
+    console.log(error)
+    dispatch({ type: "SYNC_FAIL"})
+    throw error
+
+  }
+}
+
 const store = configureStore({
   reducer: rootReducer,
   middleware: [thunk],
@@ -46,6 +60,7 @@ function App() {
     const checkLoggedIn = async () => {
       try {
         await store.dispatch(authUser);
+        await store.dispatch(getUserMovieData)
       }
       catch (e) {
         store.dispatch({ type: "LOGGED_OUT"})
@@ -66,6 +81,7 @@ function App() {
     {/* </Route> */}
     {/* <Route element={<ProtectedRoutes/>} > */}
         <Route path="/movies" element={<Movies />} />
+        <Route path="/favorites" element={<Base page="favorites"/>}/>
         <Route path="/logout" element={<Logout />} />
     {/* </Route> */}
     <Route path="/moderator" element={<Moderator authUser={authUser} />} />

@@ -23,6 +23,10 @@
     margin-bottom: 10px;
   }
   
+  .nav-link:focus {
+    color: #fff;
+  }
+
   .nav-link {
     color: #fff;
     text-decoration: none;

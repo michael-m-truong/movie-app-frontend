@@ -6,6 +6,8 @@ import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import Box from '@mui/material/Box';
 import StarIcon from '@mui/icons-material/Star';
+import { api } from "../axios/axiosConfig";
+import { useSelector, useDispatch } from 'react-redux';
 
 
 // Define the genre mappings
@@ -31,12 +33,18 @@ const genreMappings = {
   37: "Western",
 };
 
-export function Movies() {
+export function Movies({page}) {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const modalRef = useRef(null);
   const [value, setValue] = useState(null);
   const [hover, setHover] = useState(-1);
+  const favorites = useSelector(state => state.favorites.favorites);
+  const dispatch = useDispatch();
+  //console.log(selectedMovie?.id)
+  //console.log(favorites.has(String(selectedMovie?.id)))
+  console.log(page)
+  //console.log(favorites)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,19 +63,34 @@ export function Movies() {
 
         const sortedMovies = response.data.results.sort((a, b) => b.vote_average - a.vote_average);
         setMovies(sortedMovies);
+        console.log(sortedMovies)
       } catch (error) {
         console.log("Error fetching movie data:", error);
       }
     };
 
-    fetchData();
-  }, []);
+    if (page === undefined) {
+      fetchData()
+    }
+    else if (page === "favorites") {
+      console.log(favorites)
+      console.log(Object.values(favorites))
+      if (favorites) {
+        const favoritesList = Array.from(favorites.values());
+        console.log(favoritesList)
+        setMovies(favoritesList);
+      }
+    }
+  }, [page, favorites]);
 
   const getLabelText = (value) => {
     return `${value} Star${value !== 1 ? 's' : ''}`;
   };
 
   const getGenreNames = (genreIds) => {
+    if (!genreIds){
+      return false
+    }
     return genreIds
       .map((genreId) => genreMappings[genreId])
       .filter((genre) => genre); // Filter out undefined genres
@@ -75,6 +98,8 @@ export function Movies() {
 
   const openModal = (movie) => {
     setSelectedMovie(movie);
+    //send request to api to see if the movie is favorited, rated and watchlisted
+    // based on that, display a different button
   };
 
   const closeModal = () => {
@@ -90,11 +115,12 @@ export function Movies() {
   }, 160);
   };
 
+
   return (
     <>
       <div className="movie-grid">
         {movies.map((movie) => (
-          <div key={movie.id} className="movie-card" onClick={() => openModal(movie)}>
+          <div key={movie.id ? movie.id : movie.movieId } className="movie-card" onClick={() => openModal(movie)}>
             <img
               src={`https://image.tmdb.org/t/p/w400/${movie.poster_path}`}
               alt={movie.title}
@@ -143,8 +169,8 @@ export function Movies() {
           className="modal-poster"
         />
         <div className="movie-info">
-          <h2>{selectedMovie.title}</h2>
-          <p>{selectedMovie.overview}</p>
+          <h2>{selectedMovie?.title}</h2>
+          <p>{selectedMovie?.overview}</p>
           <p>
                   Your rating:
                   <Rating
@@ -169,18 +195,60 @@ export function Movies() {
                     </Box>
                   )}
                 </p>
-          <p>Critic ratings: {selectedMovie.vote_average}</p>
-          <p>Genres: {getGenreNames(selectedMovie.genre_ids).join(", ")}</p>
+          <p>Critic ratings: {selectedMovie?.vote_average}</p>
+          <p>Genres: {selectedMovie?.genre_ids ? getGenreNames(selectedMovie.genre_ids).join(", ") : selectedMovie?.genre?.join(", ")}</p>
         </div>
       </div>
 
       <div className="modal-actions">
         <Button variant="contained" className="modal-action-button">Add to Watchlist</Button>
-        <Button variant="contained" className="modal-action-button">Favorite</Button>
-      </div>
+        {(favorites.has(String(selectedMovie.id)) || favorites.has(String(selectedMovie.movieId)) ) ? (
+        <Button variant="contained" className="modal-action-button"
+        onClick={() => {
+          api.movies.remove_favorite(
+            JSON.stringify({
+              movieId: (selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId),
+            })
+          )
+          dispatch({ type: 'REMOVE_FAVORITE', payload: {movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId))} });
+          if (page === "favorites") {
+            closeModal()
+          }
+        }}>
+          Unfavorite
+        </Button>
+      ) : (
+        <Button
+          variant="contained"
+          className="modal-action-button"
+          onClick={() => {
+            api.movies.add_favorite(
+              JSON.stringify({
+                title: selectedMovie.title,
+                movieId: selectedMovie.id,
+                genre: getGenreNames(selectedMovie.genre_ids),
+                poster_path: selectedMovie.poster_path,
+                overview: selectedMovie.overview,
+                backdrop_path: selectedMovie.backdrop_path
+              })
+            );
+            dispatch({ type: 'ADD_FAVORITE', payload: {
+              title: selectedMovie.title,
+              movieId: String(selectedMovie.id),
+              genre: getGenreNames(selectedMovie.genre_ids),
+              poster_path: selectedMovie.poster_path,
+              overview: selectedMovie.overview,
+              backdrop_path: selectedMovie.backdrop_path
+            } });
+            }}
+        >
+          Favorite
+        </Button>
+      )}
+        </div> 
     </div>
   </div>
 )}
     </>
   );
-}
+}//add release date under poster
