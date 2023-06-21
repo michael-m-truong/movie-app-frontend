@@ -19,6 +19,11 @@ export function Navbar({ isLoggedIn }) {
           </Link>
         </li>
         <li className="nav-item">
+          <Link to="/upcoming" className="nav-link">
+            Upcoming
+          </Link>
+        </li>
+        <li className="nav-item">
           <Link to="/watch-list" className="nav-link">
             My Watch List
           </Link>

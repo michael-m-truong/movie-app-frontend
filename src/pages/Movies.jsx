@@ -40,8 +40,9 @@ export function Movies({page}) {
   const [value, setValue] = useState(null);
   const [hover, setHover] = useState(-1);
   const favorites = useSelector(state => state.favorites.favorites);
+  const ratings = useSelector(state => state.ratings.ratings);
   const dispatch = useDispatch();
-  //console.log(selectedMovie?.id)
+  console.log(selectedMovie)
   //console.log(favorites.has(String(selectedMovie?.id)))
   console.log(page)
   //console.log(favorites)
@@ -74,6 +75,7 @@ export function Movies({page}) {
     }
     else if (page === "favorites") {
       console.log(favorites)
+      console.log(ratings)
       console.log(Object.values(favorites))
       if (favorites) {
         const favoritesList = Array.from(favorites.values());
@@ -98,6 +100,14 @@ export function Movies({page}) {
 
   const openModal = (movie) => {
     setSelectedMovie(movie);
+    console.log(ratings)
+    if (ratings.has(String(movie?.id))) {
+      console.log("HEREEEE")
+      setValue(ratings.get(String(movie.id)).ratingValue)
+    }
+    else if (ratings.has(String(movie?.movieId))) {
+      setValue(ratings.get(String(movie.movieId)).ratingValue)
+    }
     //send request to api to see if the movie is favorited, rated and watchlisted
     // based on that, display a different button
   };
@@ -111,6 +121,7 @@ export function Movies({page}) {
     console.log(modalElement)
   setTimeout(() => {
     setSelectedMovie(null);
+    setValue(null)
     modalElement.style.animation = "";
   }, 160);
   };
@@ -177,10 +188,17 @@ export function Movies({page}) {
                     name="hover-feedback"
                     value={value}
                     precision={0.1}
-                    getLabelText={getLabelText}
+                    getLabelText={(value) => getLabelText(value)}
                     max={10}
-                    onChange={(event, newValue) => {
+                    onChange={async (event, newValue) => {
                       setValue(newValue);
+                      dispatch({ type: 'ADD_RATING', payload: {movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)), ratingValue: newValue} });
+                      if (value === null) {
+                        await api.movies.add_rating(JSON.stringify({movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)), ratingValue: newValue}))
+                      }
+                      else {
+                        await api.movies.edit_rating(JSON.stringify({movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)), ratingValue: newValue}))
+                      }
                     }}
                     onChangeActive={(event, newHover) => {
                       setHover(newHover);

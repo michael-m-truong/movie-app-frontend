@@ -38,6 +38,7 @@ async function getUserMovieData(dispatch) {
     let getUserMovieData_response = await api.movies.read_all()
     console.log(getUserMovieData_response.data.user)
     dispatch({ type: "INITIALIZE_FAVORITES", payload: Object.entries(getUserMovieData_response.data.user.favorites)})
+    dispatch({ type: "INITIALIZE_RATINGS", payload: Object.entries(getUserMovieData_response.data.user.ratings)})
   }
   catch (error) {
     console.log(error)

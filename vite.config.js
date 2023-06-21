@@ -12,6 +12,9 @@ export default defineConfig({
       "/movies/read-all": "http://localhost:3000",
       "/movies/add-favorite": "http://localhost:3000",
       "/movies/remove-favorite": "http://localhost:3000",
+      "/movies/add-rating": "http://localhost:3000",
+      "/movies/edit-rating": "http://localhost:3000",
+      "/movies/remove-rating": "http://localhost:3000",
     },
   },
   plugins: [react()],  //need this for some rzn

@@ -5,7 +5,7 @@ const initialState = {
   const favoritesReducer = (state = initialState, action) => {
     switch (action.type) {
       	case 'INITIALIZE_FAVORITES':
-			console.log("DONE")
+			console.log(action.payload)
 			return {
 				...state,
 				favorites: new Map(action.payload) // Initialize favorites with the provided Map

@@ -14,3 +14,13 @@ export const remove_favoriteService = (data) => instance.post(
     "movies/remove-favorite", 
     data,
 )
+
+export const add_ratingService = (data) => instance.post(
+    "movies/add-rating", 
+    data,
+)
+
+export const edit_ratingService = (data) => instance.post(
+    "movies/edit-rating", 
+    data,
+)
