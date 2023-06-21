@@ -41,10 +41,12 @@ export function Movies({page}) {
   const [hover, setHover] = useState(-1);
   const favorites = useSelector(state => state.favorites.favorites);
   const ratings = useSelector(state => state.ratings.ratings);
+  const searchResults = useSelector(state => state.searchResults.searchResults)
   const dispatch = useDispatch();
   console.log(selectedMovie)
   //console.log(favorites.has(String(selectedMovie?.id)))
   console.log(page)
+  console.log(searchResults)
   //console.log(favorites)
 
   useEffect(() => {
@@ -71,19 +73,29 @@ export function Movies({page}) {
     };
 
     if (page === undefined) {
+      dispatch({ type: "CLEAR_SEARCH", payload: null });
       fetchData()
     }
     else if (page === "favorites") {
       console.log(favorites)
       console.log(ratings)
       console.log(Object.values(favorites))
+      dispatch({ type: "CLEAR_SEARCH", payload: null });
       if (favorites) {
         const favoritesList = Array.from(favorites.values());
         console.log(favoritesList)
         setMovies(favoritesList);
       }
     }
-  }, [page, favorites]);
+    else if (page === "search") {
+      console.log("NEW MOVIES")
+      console.log(searchResults)
+      if (searchResults) {
+        console.log("huhfffffffffffffffffffffffffffffffff")
+        setMovies(searchResults);
+      }
+    }
+  }, [page, favorites, searchResults]);
 
   const getLabelText = (value) => {
     return `${value} Star${value !== 1 ? 's' : ''}`;

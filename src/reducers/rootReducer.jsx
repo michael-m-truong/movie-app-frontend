@@ -9,7 +9,7 @@ import ratingsReducer from './ratingsReducer';
 const rootReducer = combineReducers({
   user: userReducer,
   favorites: favoritesReducer,
-  search: searchReducer,
+  searchResults: searchReducer,
   ratings: ratingsReducer
   //currentPage: currentPageReduccer
 });

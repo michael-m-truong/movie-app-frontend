@@ -72,8 +72,8 @@ function App() {
 
   return (
     <>
-    <Header></Header>
     <Provider store={store}>
+    <Header></Header>
     <Routes>
     <Route path="/" element={<Base authUser={authUser}/>}/>
     {/* <Route element={<UnprotectedRoutes/>} > */}
@@ -81,7 +81,7 @@ function App() {
       <Route path="/register" element={<Register />}/>
     {/* </Route> */}
     {/* <Route element={<ProtectedRoutes/>} > */}
-        <Route path="/movies" element={<Movies />} />
+        <Route path="/search" element={<Movies page="search"/>} />
         <Route path="/favorites" element={<Base page="favorites"/>}/>
         <Route path="/logout" element={<Logout />} />
     {/* </Route> */}
