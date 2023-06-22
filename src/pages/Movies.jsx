@@ -345,6 +345,26 @@ export function Movies({page}) {
           Favorite
         </Button>
       )}
+
+      {(ratings.has(String(selectedMovie.id)) || ratings.has(String(selectedMovie.movieId)) ) ? (
+        <Button variant="contained" className="modal-action-button"
+        onClick={() => {
+          api.movies.remove_rating(
+            JSON.stringify({
+              movieId: (selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId),
+            })
+          )
+          dispatch({ type: 'REMOVE_RATING', payload: {movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId))} });
+          if (page === "ratings") {
+            closeModal()
+          }
+        }}>
+          Remove Rating
+        </Button>
+      ) : (
+        null
+      )}
+
         </div> 
     </div>
   </div>

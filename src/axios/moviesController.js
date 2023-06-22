@@ -25,6 +25,11 @@ export const edit_ratingService = (data) => instance.post(
     data,
 )
 
+export const remove_ratingService = (data) => instance.post(
+    "movies/remove-rating", 
+    data,
+)
+
 export const add_watchlistService = (data) => instance.post(
     "movies/add-watchlist", 
     data,
