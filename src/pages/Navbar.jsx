@@ -24,13 +24,18 @@ export function Navbar({ isLoggedIn }) {
           </Link>
         </li>
         <li className="nav-item">
-          <Link to="/watch-list" className="nav-link">
+          <Link to="/watchlist" className="nav-link">
             My Watch List
           </Link>
         </li>
         <li className="nav-item">
           <Link to="/favorites" className="nav-link">
             My Favorites
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link to="/ratings" className="nav-link">
+            My Ratings
           </Link>
         </li>
         {isLoggedIn ? (

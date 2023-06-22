@@ -39,6 +39,7 @@ async function getUserMovieData(dispatch) {
     console.log(getUserMovieData_response.data.user)
     dispatch({ type: "INITIALIZE_FAVORITES", payload: Object.entries(getUserMovieData_response.data.user.favorites)})
     dispatch({ type: "INITIALIZE_RATINGS", payload: Object.entries(getUserMovieData_response.data.user.ratings)})
+    dispatch({ type: "INITIALIZE_WATCHLIST", payload: Object.entries(getUserMovieData_response.data.user.watchlist)})
   }
   catch (error) {
     console.log(error)
@@ -83,6 +84,8 @@ function App() {
     {/* <Route element={<ProtectedRoutes/>} > */}
         <Route path="/search" element={<Movies page="search"/>} />
         <Route path="/favorites" element={<Base page="favorites"/>}/>
+        <Route path="/watchlist" element={<Base page="watchlist"/>}/>
+        <Route path="/ratings" element={<Base page="ratings"/>}/>
         <Route path="/logout" element={<Logout />} />
     {/* </Route> */}
     <Route path="/moderator" element={<Moderator authUser={authUser} />} />

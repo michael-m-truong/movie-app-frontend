@@ -41,6 +41,7 @@ export function Movies({page}) {
   const [hover, setHover] = useState(-1);
   const favorites = useSelector(state => state.favorites.favorites);
   const ratings = useSelector(state => state.ratings.ratings);
+  const watchlist = useSelector(state => state.watchlist.watchlist);
   const searchResults = useSelector(state => state.searchResults.searchResults)
   const dispatch = useDispatch();
   console.log(selectedMovie)
@@ -87,6 +88,22 @@ export function Movies({page}) {
         setMovies(favoritesList);
       }
     }
+    else if (page === "watchlist") {
+      dispatch({ type: "CLEAR_SEARCH", payload: null });
+      if (watchlist) {
+        const watchlist_List = Array.from(watchlist.values());
+        console.log(watchlist_List)
+        setMovies(watchlist_List);
+      }
+    }
+    else if (page === "ratings") {
+      dispatch({ type: "CLEAR_SEARCH", payload: null });
+      if (ratings) {
+        const ratingsList = Array.from(ratings.values());
+        console.log(ratingsList)
+        setMovies(ratingsList);
+      }
+    }
     else if (page === "search") {
       console.log("NEW MOVIES")
       console.log(searchResults)
@@ -95,9 +112,10 @@ export function Movies({page}) {
         setMovies(searchResults);
       }
     }
-  }, [page, favorites, searchResults]);
+  }, [page, favorites, searchResults, watchlist, ratings]);
 
   const getLabelText = (value) => {
+    if (value === null) return
     return `${value} Star${value !== 1 ? 's' : ''}`;
   };
 
@@ -204,9 +222,17 @@ export function Movies({page}) {
                     max={10}
                     onChange={async (event, newValue) => {
                       setValue(newValue);
-                      dispatch({ type: 'ADD_RATING', payload: {movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)), ratingValue: newValue} });
+                      dispatch({ type: 'ADD_RATING', payload: {movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)), ratingValue: newValue, title: selectedMovie.title,
+                        genre: getGenreNames(selectedMovie.genre_ids),
+                        poster_path: selectedMovie.poster_path,
+                        overview: selectedMovie.overview,
+                        backdrop_path: selectedMovie.backdrop_path} });
                       if (value === null) {
-                        await api.movies.add_rating(JSON.stringify({movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)), ratingValue: newValue}))
+                        await api.movies.add_rating(JSON.stringify({movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)), ratingValue: newValue, title: selectedMovie.title,
+                          genre: getGenreNames(selectedMovie.genre_ids),
+                          poster_path: selectedMovie.poster_path,
+                          overview: selectedMovie.overview,
+                          backdrop_path: selectedMovie.backdrop_path}))
                       }
                       else {
                         await api.movies.edit_rating(JSON.stringify({movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)), ratingValue: newValue}))
@@ -219,7 +245,7 @@ export function Movies({page}) {
                       <StarIcon style={{ opacity: 1. }} fontSize="inherit" />
                     }
                   />
-                  {value !== null && (
+                  {(
                     <Box sx={{ ml: 2 }}>
                       {getLabelText(hover !== -1 ? hover : value)}
                     </Box>
@@ -231,7 +257,51 @@ export function Movies({page}) {
       </div>
 
       <div className="modal-actions">
-        <Button variant="contained" className="modal-action-button">Add to Watchlist</Button>
+        
+      {(watchlist.has(String(selectedMovie.id)) || watchlist.has(String(selectedMovie.movieId)) ) ? (
+        <Button variant="contained" className="modal-action-button"
+        onClick={() => {
+          api.movies.remove_watchlist(
+            JSON.stringify({
+              movieId: (selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId),
+            })
+          )
+          dispatch({ type: 'REMOVE_WATCHLIST', payload: {movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId))} });
+          if (page === "watchlist") {
+            closeModal()
+          }
+        }}>
+          Remove from watchlist
+        </Button>
+      ) : (
+        <Button
+          variant="contained"
+          className="modal-action-button"
+          onClick={() => {
+            api.movies.add_watchlist(
+              JSON.stringify({
+                title: selectedMovie.title,
+                movieId: selectedMovie.id,
+                genre: getGenreNames(selectedMovie.genre_ids),
+                poster_path: selectedMovie.poster_path,
+                overview: selectedMovie.overview,
+                backdrop_path: selectedMovie.backdrop_path
+              })
+            );
+            dispatch({ type: 'ADD_WATCHLIST', payload: {
+              title: selectedMovie.title,
+              movieId: String(selectedMovie.id),
+              genre: getGenreNames(selectedMovie.genre_ids),
+              poster_path: selectedMovie.poster_path,
+              overview: selectedMovie.overview,
+              backdrop_path: selectedMovie.backdrop_path
+            } });
+            }}
+        >
+          Add to watchlist
+        </Button>
+      )}
+        
         {(favorites.has(String(selectedMovie.id)) || favorites.has(String(selectedMovie.movieId)) ) ? (
         <Button variant="contained" className="modal-action-button"
         onClick={() => {
