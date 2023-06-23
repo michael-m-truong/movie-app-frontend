@@ -3,20 +3,37 @@ import "../assets/css/header.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import {  useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 
 
-export function Header() {
+export function Header({ authUser }) {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate()
+  const location = useLocation();
   const searchResults = useSelector(state => state.searchResults.searchResults)
   const dispatch = useDispatch();
-
+  const isLoggedIn = useSelector(state => state.user.isLoggedIn);
   const handleSearch = (e) => {
     e.preventDefault();
     // Update the URL with the search query
     navigate(`/search?title=${searchQuery}`);
   };
+
+  useEffect(() => {
+    // Remove the 'selected' class from all nav items
+    console.log("here")
+    const navItems = document.getElementsByClassName("nav-item");
+    for (let i = 0; i < navItems.length; i++) {
+      navItems[i].classList.remove("selected");
+    }
+
+    // Add the 'selected' class to the nav item matching the current location
+    const currentItem = document.querySelector(`.nav-item a[href="${location.pathname}"]`);
+    console.log(currentItem)
+    if (currentItem) {
+      currentItem.parentElement.classList.add("selected");
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,9 +66,10 @@ export function Header() {
       }
     }
     fetchData()
-  }, );
+  }, [window.location.search]);
 
   useEffect(() => {
+    console.log("here")
     if (searchResults === null) return
     setSearchQuery("");
   }, [location.pathname]);
@@ -61,6 +79,36 @@ export function Header() {
       <Link to="/" className="header-title">
         Movie App
       </Link>
+     
+        <li className="nav-item top">
+          <Link to="/now-playing" className="nav-link">
+            Now Playing
+          </Link>
+        </li>
+        <li className="nav-item top">
+          <Link to="/top-movies" className="nav-link">
+            Top Movies
+          </Link>
+        </li>
+        <li className="nav-item top">
+          <Link to="/upcoming" className="nav-link">
+            Upcoming
+          </Link>
+        </li>
+        <li className="nav-item top">
+          <Link to="/discover" className="nav-link">
+            Discover
+          </Link>
+        </li>
+
+        {isLoggedIn ? (
+          <AuthenticatedLinks />
+        ) : (
+          <UnauthenticatedLinks />
+        )}
+        
+        
+      
       <form onSubmit={handleSearch} className="header-search">
         <input
           type="text"
@@ -75,4 +123,51 @@ export function Header() {
       </form>
     </div>
   );
+}
+
+const AuthenticatedLinks = () => (
+  <>
+  <li className="nav-item nav-link top" onClick={logout}>
+    Signout
+    {/* <Link to="/logout" className="nav-link">
+      Sign Out
+    </Link> */}
+  </li>
+  <li className="nav-item top">
+  <Link to="/watchlist" className="nav-link">
+    My Watch List
+  </Link>
+</li>
+{/* <li className="nav-item top">
+  <Link to="/favorites" className="nav-link">
+    My Favorites
+  </Link>
+</li>
+<li className="nav-item top">
+  <Link to="/ratings" className="nav-link">
+    My Ratings
+  </Link>
+</li> */}
+</>
+);
+
+const UnauthenticatedLinks = () => (
+  <>
+    <li className="nav-item top">
+      <Link to="/login" className="nav-link">
+        Log In
+      </Link>
+    </li>
+    <li className="nav-item top">
+      <Link to="/register" className="nav-link">
+        Register
+      </Link>
+    </li>
+  </>
+);
+
+
+const logout = async () => {
+    await store.dispatch({ type: "LOGGED_OUT"})
+    await api.auth.logout()
 }

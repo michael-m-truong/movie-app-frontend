@@ -18,6 +18,8 @@ import rootReducer from './reducers/rootReducer'
 import { useEffect } from 'react'
 import { Provider } from 'react-redux'
 import { Header } from './pages/Header'
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 async function authUser(dispatch) {
   try {
@@ -73,8 +75,9 @@ function App() {
 
   return (
     <>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
     <Provider store={store}>
-    <Header></Header>
+    <Header authUser={authUser}></Header>
     <Routes>
     <Route path="/" element={<Base authUser={authUser}/>}/>
     {/* <Route element={<UnprotectedRoutes/>} > */}
@@ -86,11 +89,16 @@ function App() {
         <Route path="/favorites" element={<Base page="favorites"/>}/>
         <Route path="/watchlist" element={<Base page="watchlist"/>}/>
         <Route path="/ratings" element={<Base page="ratings"/>}/>
+        <Route path="/now-playing" element={<Movies page="now-playing"/>}/>
+        <Route path="/upcoming" element={<Movies page="upcoming"/>}/>
+        <Route path="/top-movies" element={<Movies page="top-movies"/>}/>
+        <Route path="/discover" element={<Base page="discover"/>}/>
         <Route path="/logout" element={<Logout />} />
     {/* </Route> */}
     <Route path="/moderator" element={<Moderator authUser={authUser} />} />
     </Routes>
     </Provider>
+    </LocalizationProvider>
     </>
   )
 }

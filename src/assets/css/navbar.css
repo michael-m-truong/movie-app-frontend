@@ -1,15 +1,17 @@
 .navbar {
-    background-color: #222;
-    padding: 10px;
+    background-color: #f1f1f1;
+    /* padding: 10px; */
     position: sticky;
     top: 0;
     height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    /* justify-content: center; */
     z-index: 999;
     width: 100%;
+    padding-top: 0;
+    overflow-y: auto;
   }
   
   
@@ -17,6 +19,7 @@
     list-style-type: none;
     padding: 0;
     margin: 0;
+    font-size: 20px;
   }
   
   .nav-item {
@@ -39,6 +42,12 @@
   
   .nav-link:hover {
     background-color: #555;
+    color: #fff;
     cursor: pointer;
+  }
+
+  .nav-item.selected {
+    background-color: #555;
+    border-radius: 5px;
   }
   

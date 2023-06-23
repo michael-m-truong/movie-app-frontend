@@ -5,6 +5,7 @@
     padding: 16px;
     background-color: #333;
     color: #fff;
+    /* height: 11vh; */
   }
   
   .header-title {
@@ -41,3 +42,9 @@
     background-color: #e89e0c;
   }
   
+  .nav-item.top{
+    list-style-type: none;
+    font-size: 20px;
+    margin-bottom: 0;
+  }
+

@@ -8,6 +8,20 @@
     width: calc(25% - 20px); /* Adjust the width as needed */
     margin-bottom: 20px;
   }
+
+  /* Adjust the width for screens smaller than 600px */
+@media (max-width: 600px) {
+  .movie-card {
+    width: calc(100% - 20px);
+  }
+}
+
+/* Adjust the width for screens between 600px and 1200px */
+@media (min-width: 600px) and (max-width: 1200px) {
+  .movie-card {
+    width: calc(50% - 20px);
+  }
+}
   
   .movie-title {
     font-size: 16px;

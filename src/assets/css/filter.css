@@ -1,0 +1,34 @@
+.filter-options {
+
+    background-color: #f1f1f1; /* white background color */
+    color: white;
+    padding: 16px;
+    height: 100%;
+    /* max-height: 86.5vh; */
+}
+
+.filter-options > * {
+    margin-bottom: 20px !important; /* Adds 10px space between each component */
+    
+  }
+
+.sort_by {
+    font-size: 1rem;
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    max-height: 56px;
+  }
+  
+  .slider-label {
+    margin-right: 1rem;
+    color: black;
+  }
+  
+  .slider-value {
+    width: 4rem;
+    margin-left: 1rem;
+  }
+  

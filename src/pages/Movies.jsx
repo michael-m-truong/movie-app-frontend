@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes, useLocation } from "react-router-dom";
 import axios from "axios";
 import "../assets/css/movies.css";
 import Button from '@mui/material/Button';
@@ -44,6 +44,7 @@ export function Movies({page}) {
   const watchlist = useSelector(state => state.watchlist.watchlist);
   const searchResults = useSelector(state => state.searchResults.searchResults)
   const dispatch = useDispatch();
+  const location = useLocation()
   console.log(selectedMovie)
   //console.log(favorites.has(String(selectedMovie?.id)))
   console.log(page)
@@ -51,10 +52,10 @@ export function Movies({page}) {
   //console.log(favorites)
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (type) => {
       try {
         const response = await axios.get(
-          "https://api.themoviedb.org/3/movie/now_playing",
+          `https://api.themoviedb.org/${type}`,
           {
             headers: {
               Authorization: `Bearer ${import.meta.env.VITE_READ_ACCESS_TOKEN}`, // Replace with your actual bearer token
@@ -73,9 +74,125 @@ export function Movies({page}) {
       }
     };
 
+    const fetchData_upcoming = async (type) => {
+      try {
+        const currentDate = new Date();
+        const twoMonthsLater = new Date();
+        twoMonthsLater.setMonth(twoMonthsLater.getMonth() + 2);
+
+        const formattedCurrentDate = currentDate.toISOString().split("T")[0];
+        const formattedTwoMonthsLater = twoMonthsLater.toISOString().split("T")[0];
+        const response = await axios.get(
+          `https://api.themoviedb.org/${type}`,
+          {
+            headers: {
+              Authorization: `Bearer ${import.meta.env.VITE_READ_ACCESS_TOKEN}`, // Replace with your actual bearer token
+            },
+            params: {
+              api_key: "YOUR_API_KEY", // Replace with your actual API key
+              "primary_release_date.gte": formattedCurrentDate,
+              "primary_release_date.lte": formattedTwoMonthsLater,
+              "sort_by": "popularity.desc"
+            },
+          }
+        );
+
+        //const sortedMovies = response.data.results.sort((a, b) => b.vote_average - a.vote_average);
+        //setMovies(sortedMovies);
+        setMovies(response.data.results)
+        console.log(sortedMovies)
+      } catch (error) {
+        console.log("Error fetching movie data:", error);
+      }
+    };
+
+    const fetchData_discover = async (type) => {
+      try {
+        const searchParams = new URLSearchParams(window.location.search);
+    
+        const currentDate = new Date();
+        const twoMonthsLater = new Date();
+        twoMonthsLater.setMonth(twoMonthsLater.getMonth() + 2);
+    
+        const formattedCurrentDate = currentDate.toISOString().split("T")[0];
+        const formattedTwoMonthsLater = twoMonthsLater.toISOString().split("T")[0];
+
+        const params = {
+          "sort_by": searchParams.get("sort_by") || "popularity.desc"
+        };
+
+    const primaryReleaseDateGte = searchParams.get("primary_release_date.gte");
+    const primaryReleaseDateLte = searchParams.get("primary_release_date.lte");
+    const withGenres = searchParams.get("with_genres");
+    const voteAverageGte = searchParams.get("vote_average.gte");
+
+    // if (primaryReleaseDateGte || primaryReleaseDateLte || withGenres || voteAverageGte) {
+    //   params["sort_by"] = "vote_average.desc"
+    // }
+
+    console.log(primaryReleaseDateGte)
+
+    if (primaryReleaseDateGte) {
+      params["primary_release_date.gte"] = primaryReleaseDateGte;
+    } 
+
+    if (primaryReleaseDateLte) {
+      params["primary_release_date.lte"] = primaryReleaseDateLte;
+    }
+
+    if (withGenres) {
+      params["with_genres"] = withGenres;
+    }
+
+    if (voteAverageGte) {
+      params["vote_average.gte"] = voteAverageGte;
+    }
+
+    params['vote_count.gte'] = 100
+    
+        const response = await axios.get(
+          `https://api.themoviedb.org/${type}`,
+          {
+            headers: {
+              Authorization: `Bearer ${import.meta.env.VITE_READ_ACCESS_TOKEN}`, // Replace with your actual bearer token
+            },
+            params: params
+          }
+        );
+    
+        // Process the response data
+        // ...
+        setMovies(response.data.results)
+      } catch (error) {
+        // Handle errors
+        // ...
+      }
+    };
+
     if (page === undefined) {
       dispatch({ type: "CLEAR_SEARCH", payload: null });
-      fetchData()
+      //document.getElementById("navbar")?.style.justifyContent = "space-between"
+      fetchData_discover('3/discover/movie')
+    }
+    else if (page == 'now-playing') {
+      dispatch({ type: "CLEAR_SEARCH", payload: null });
+      //document.getElementById("navbar")?.style.justifyContent = "center"
+      fetchData('3/movie/now_playing')
+    }
+    else if (page == 'upcoming') {
+      dispatch({ type: "CLEAR_SEARCH", payload: null });
+      //document.getElementById("navbar")?.style.justifyContent = "center"
+      fetchData_upcoming('3/movie/upcoming')
+    }
+    else if (page == 'top-movies') {
+      dispatch({ type: "CLEAR_SEARCH", payload: null });
+      //document.getElementById("navbar")?.style.justifyContent = "center"
+      fetchData('3/movie/top_rated')
+    }
+    else if (page == 'discover') {
+      dispatch({ type: "CLEAR_SEARCH", payload: null });
+      //document.getElementById("navbar")?.style.justifyContent = "space-between"
+      fetchData_discover('3/discover/movie')
     }
     else if (page === "favorites") {
       console.log(favorites)
@@ -112,7 +229,7 @@ export function Movies({page}) {
         setMovies(searchResults);
       }
     }
-  }, [page, favorites, searchResults, watchlist, ratings]);
+  }, [page, favorites, searchResults, watchlist, ratings, location]);
 
   const getLabelText = (value) => {
     if (value === null) return
@@ -131,11 +248,11 @@ export function Movies({page}) {
   const openModal = (movie) => {
     setSelectedMovie(movie);
     console.log(ratings)
-    if (ratings.has(String(movie?.id))) {
+    if (ratings?.has(String(movie?.id))) {
       console.log("HEREEEE")
       setValue(ratings.get(String(movie.id)).ratingValue)
     }
-    else if (ratings.has(String(movie?.movieId))) {
+    else if (ratings?.has(String(movie?.movieId))) {
       setValue(ratings.get(String(movie.movieId)).ratingValue)
     }
     //send request to api to see if the movie is favorited, rated and watchlisted
@@ -258,7 +375,7 @@ export function Movies({page}) {
 
       <div className="modal-actions">
         
-      {(watchlist.has(String(selectedMovie.id)) || watchlist.has(String(selectedMovie.movieId)) ) ? (
+      {(watchlist?.has(String(selectedMovie.id)) || watchlist?.has(String(selectedMovie.movieId)) ) ? (
         <Button variant="contained" className="modal-action-button"
         onClick={() => {
           api.movies.remove_watchlist(
@@ -302,7 +419,7 @@ export function Movies({page}) {
         </Button>
       )}
         
-        {(favorites.has(String(selectedMovie.id)) || favorites.has(String(selectedMovie.movieId)) ) ? (
+        {(favorites?.has(String(selectedMovie.id)) || favorites?.has(String(selectedMovie.movieId)) ) ? (
         <Button variant="contained" className="modal-action-button"
         onClick={() => {
           api.movies.remove_favorite(
@@ -346,7 +463,7 @@ export function Movies({page}) {
         </Button>
       )}
 
-      {(ratings.has(String(selectedMovie.id)) || ratings.has(String(selectedMovie.movieId)) ) ? (
+      {(ratings?.has(String(selectedMovie.id)) || ratings?.has(String(selectedMovie.movieId)) ) ? (
         <Button variant="contained" className="modal-action-button"
         onClick={() => {
           api.movies.remove_rating(
