@@ -48,3 +48,42 @@
     margin-bottom: 0;
   }
 
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #333;
+    padding: 10px;
+    border-radius: 5px;
+    width: 150px;
+  }
+  
+  .show {
+    display: block;
+  }
+  
+  .show-dropdown {
+    position: relative;
+  }
+  
+  .dropdown-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .dropdown-list li {
+    margin-bottom: 5px;
+  }
+  
+  .dropdown-list li a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .dropdown-list li a:hover {
+    color: #fff;
+  }
+  

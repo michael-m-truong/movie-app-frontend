@@ -8,7 +8,7 @@ import FilterOptions_MUI from "../components/FilterOptions_MUI";
 
 export function Navbar() {
   const location = useLocation();
-  const isDiscoverPage = location.pathname === '/discover' || location.pathname === '/';
+  const isDiscoverPage = location.pathname === '/discover' || location.pathname === '/' || location.pathname === '/watchlist' || location.pathname === '/ratings' || location.pathname === '/favorites';
 
   return (
     <div className="navbar" id="navbar">

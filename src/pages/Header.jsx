@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import {  useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from "react-router-dom"
+import { store } from '../App';
+import { api } from "../axios/axiosConfig";
 
 
 export function Header({ authUser }) {
@@ -125,31 +127,59 @@ export function Header({ authUser }) {
   );
 }
 
-const AuthenticatedLinks = () => (
-  <>
-  <li className="nav-item nav-link top" onClick={logout}>
-    Signout
-    {/* <Link to="/logout" className="nav-link">
-      Sign Out
-    </Link> */}
-  </li>
-  <li className="nav-item top">
-  <Link to="/watchlist" className="nav-link">
-    My Watch List
-  </Link>
-</li>
-{/* <li className="nav-item top">
-  <Link to="/favorites" className="nav-link">
-    My Favorites
-  </Link>
-</li>
-<li className="nav-item top">
-  <Link to="/ratings" className="nav-link">
-    My Ratings
-  </Link>
-</li> */}
-</>
-);
+const AuthenticatedLinks = () => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  const navigate = useNavigate()
+
+  const logout = async () => {
+    await store.dispatch({ type: "LOGGED_OUT"})
+    await api.auth.logout()
+    navigate('/')
+}
+
+  return (
+    <>
+      <li
+        className={`nav-item top ${isHovered ? "show-dropdown" : ""}`}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <span className="nav-link">My Lists</span>
+        <div className={`dropdown-menu ${isHovered ? "show" : ""}`}>
+          <ul className="dropdown-list">
+            <li className="nav-item top">
+              <Link to="/watchlist" className="dropdown-link">
+                My Watch List
+              </Link>
+            </li>
+            <li className="nav-item top">
+              <Link to="/favorites" className="dropdown-link">
+                My Favorites
+              </Link>
+            </li>
+            <li className="nav-item top">
+              <Link to="/ratings" className="dropdown-link">
+                My Ratings
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li className="nav-item top nav-link" onClick={logout}>
+        Signout
+      </li>
+    </>
+  );
+};
 
 const UnauthenticatedLinks = () => (
   <>
@@ -166,8 +196,3 @@ const UnauthenticatedLinks = () => (
   </>
 );
 
-
-const logout = async () => {
-    await store.dispatch({ type: "LOGGED_OUT"})
-    await api.auth.logout()
-}
