@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../assets/css/filter.css";
 import { FormControl, InputLabel, MenuItem, Select, Checkbox, Slider, Chip, Button } from "@mui/material";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -29,9 +29,10 @@ const genreMappings = {
 
 const FilterOptions = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [sortBy, setSortBy] = useState(""); // Initialize sortBy state
-  const [earliestDate, setEarliestDate] = useState(""); // Initialize sortBy state
-  const [latestDate, setLatestDate] = useState(""); // Initialize sortBy state
+  const [earliestDate, setEarliestDate] = useState(null); // Initialize sortBy state
+  const [latestDate, setLatestDate] = useState(null); // Initialize sortBy state
   const [selectedGenres, setSelectedGenres] = useState([]); // State for selected genres
   const [minScore, setMinScore] = useState(0);
 
@@ -69,6 +70,8 @@ const FilterOptions = () => {
   };
   
   const resetFilters = () => {
+    setEarliestDate(null);
+    setLatestDate(null);
     setSortBy("");
     setSelectedGenres([]);
     setMinScore(0);
@@ -76,20 +79,32 @@ const FilterOptions = () => {
   };
 
   useEffect(() => {
+    const resetFilters = () => {
+        setEarliestDate(null);
+        setLatestDate(null);
+        setSortBy("");
+        setSelectedGenres([]);
+        setMinScore(0);
+      };
+    resetFilters()
+    console.log("reset")
+  }, [location]);
+
+  useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
-  const formattedEarliestDate = searchParams.get("primary_release_date.lte") || "";
-  const formattedLatestDate = searchParams.get("primary_release_date.gte") || "";
+  const formattedLatestDate = searchParams.get("primary_release_date.lte") || "";
+  const formattedEarliestDate = searchParams.get("primary_release_date.gte") || "";
   console.log(searchParams.get("primary_release_date.gte"))
   if (formattedEarliestDate) {
     setEarliestDate(dayjs(formattedEarliestDate));
   } else {
-    setEarliestDate("");
+    setEarliestDate(null);
   }
   
   if (formattedLatestDate) {
     setLatestDate(dayjs(formattedLatestDate));
   } else {
-    setLatestDate("");
+    setLatestDate(null);
   }
     setSortBy(searchParams.get("sort_by") || "");
     setMinScore(Number(searchParams.get("vote_average.gte")) || 0);

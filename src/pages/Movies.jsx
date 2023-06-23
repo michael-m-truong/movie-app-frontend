@@ -126,9 +126,13 @@ export function Movies({page}) {
     const withGenres = searchParams.get("with_genres");
     const voteAverageGte = searchParams.get("vote_average.gte");
 
-    // if (primaryReleaseDateGte || primaryReleaseDateLte || withGenres || voteAverageGte) {
-    //   params["sort_by"] = "vote_average.desc"
-    // }
+    if (primaryReleaseDateGte && !searchParams.get("sort_by")) {
+      params["sort_by"] = "vote_average.desc"
+    }
+    if (primaryReleaseDateLte && !searchParams.get("sort_by")) {
+      params["sort_by"] = "vote_average.desc"
+    }
+    
 
     console.log(primaryReleaseDateGte)
 
