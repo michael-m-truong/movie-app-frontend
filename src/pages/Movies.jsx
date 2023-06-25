@@ -261,7 +261,7 @@ export function Movies({page}) {
       );
       setMovies([...movies, ...response.data?.results])
     }
-    loadMoreMovies()
+    (currentPage != 1) && loadMoreMovies()
     console.log(currentPage)
   }, [currentPage])
 
