@@ -37,6 +37,8 @@ export function Movies({page}) {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const modalRef = useRef(null);
+  const [currentPage, setCurrentPage] = useState(1)
+  const [requestUrl, setRequestUrl] = useState("")
   const [value, setValue] = useState(null);
   const [hover, setHover] = useState(-1);
   const favorites = useSelector(state => state.favorites.favorites);
@@ -67,6 +69,7 @@ export function Movies({page}) {
         );
 
         const sortedMovies = response.data.results.sort((a, b) => b.vote_average - a.vote_average);
+        setRequestUrl(response.request?.responseURL)
         setMovies(sortedMovies);
         console.log(sortedMovies)
       } catch (error) {
@@ -99,6 +102,7 @@ export function Movies({page}) {
 
         //const sortedMovies = response.data.results.sort((a, b) => b.vote_average - a.vote_average);
         //setMovies(sortedMovies);
+        setRequestUrl(response.request?.responseURL)
         setMovies(response.data.results)
         console.log(sortedMovies)
       } catch (error) {
@@ -166,6 +170,7 @@ export function Movies({page}) {
     
         // Process the response data
         // ...
+        setRequestUrl(response.request?.responseURL)
         setMovies(response.data.results)
       } catch (error) {
         // Handle errors
@@ -234,6 +239,56 @@ export function Movies({page}) {
       }
     }
   }, [page, favorites, searchResults, watchlist, ratings, location]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    // cleanup function
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(()=> {
+    const loadMoreMovies = async () => {
+      const response = await axios.get(
+        requestUrl,
+        {
+          headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_READ_ACCESS_TOKEN}`, // Replace with your actual bearer token
+          },
+          params: {
+            page: currentPage
+          },
+        }
+      );
+      setMovies([...movies, ...response.data?.results])
+    }
+    loadMoreMovies()
+    console.log(currentPage)
+  }, [currentPage])
+
+  useEffect(()=> {
+    const resetPageNum = () => setCurrentPage(1)
+    resetPageNum()
+  }, [requestUrl])
+
+  const handleScroll = () => {
+    const windowHeight =
+      "innerHeight" in window
+        ? window.innerHeight
+        : document.documentElement.offsetHeight;
+    const body = document.body;
+    const html = document.documentElement;
+    const docHeight = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight
+    );
+    const windowBottom = windowHeight + window.scrollY;
+    if (windowBottom >= docHeight - 1) {
+      setCurrentPage((page) => page + 1)
+    }
+  };
 
   const getLabelText = (value) => {
     if (value === null) return
