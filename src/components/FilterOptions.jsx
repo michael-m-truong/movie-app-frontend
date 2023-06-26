@@ -152,7 +152,7 @@ const FilterOptions = () => {
               handleFilterChange("primary_release_date.lte", formattedDate);
             }}/>
         <div className="slider-container">
-          <div className="slider-label">Min Score</div>
+          <div className="slider-label">Vote Score</div>
           <Slider
             className="slider"
             value={minScore}
@@ -167,12 +167,13 @@ const FilterOptions = () => {
           <input
             type="number"
             className="slider-value"
-            value={minScore}
+            value={minScore === 0 ? '' : minScore}
+            placeholder="0"
             onChange={(event) => handleSliderChange(event, event.target.value)}
           />
         </div>
         <div className="slider-container">
-          <div className="slider-label">Min Vote Count</div>
+          <div className="slider-label">Vote Count</div>
           <Slider
             className="slider"
             value={minVoteCount}
@@ -187,7 +188,8 @@ const FilterOptions = () => {
           <input
             type="number"
             className="slider-value"
-            value={minVoteCount}
+            value={minVoteCount === 0 ? '' : minVoteCount}
+            placeholder="0"
             onChange={(event) => handleVoteSliderChange(event, event.target.value)}
           />
         </div>
