@@ -202,7 +202,7 @@ const FilterOptions = () => {
             name="sort_by"
             onChange={(e) => {
               setSortBy(e.target.value);
-              //handleFilterChange(e);
+              handleFilterChange(e);
             }}
           >
             <MenuItem value="popularity.desc">Popularity Descending</MenuItem>
