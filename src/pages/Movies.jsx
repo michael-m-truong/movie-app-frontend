@@ -364,6 +364,7 @@ export function Movies({routerPage}) {
         );
         if (routerPage !== 'now-playing') {
           setMovies((movies) => [...movies, ...response.data.results])
+          return
         }
         const filteredMovies = response.data.results.filter(movie => movie.popularity >= 30);
         moreMovies.push(...filteredMovies);

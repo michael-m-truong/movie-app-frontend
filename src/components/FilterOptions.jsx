@@ -43,22 +43,32 @@ const FilterOptions = () => {
       name = target.name;
       value = target.value;
     }
-  
     const searchParams = new URLSearchParams(window.location.search);
-    console.log(value)
-    searchParams.set(name, value);
-  
+    if (name === "with_genres" && value == []) {
+      searchParams.delete("with_genres")
+    }
+    else {
+      searchParams.set(name, value);
+    }
     navigate(`?${searchParams.toString()}`, { replace: true });
   };
   
 
   const handleGenreChipDelete = (genreId) => {
-    const updatedGenres = selectedGenres.filter((genre) => genre !== genreId);
+    let updatedGenres = selectedGenres.filter((genre) => genre !== genreId);
+    console.log(genreId)
+    if (!selectedGenres.includes(genreId)) {
+      return
+    }
+    if (updatedGenres.toString() == [0].toString()) {
+      updatedGenres = []
+    }
     setSelectedGenres(updatedGenres);
     handleFilterChange("with_genres", updatedGenres.join(","));
   };
 
   const handleGenreChipClick = (genreId) => {
+    console.log(selectedGenres)
     if (!selectedGenres.includes(genreId)) {
       setSelectedGenres([...selectedGenres, genreId]);
       handleFilterChange("with_genres", [...selectedGenres, genreId].join(","));
@@ -192,7 +202,7 @@ const FilterOptions = () => {
             name="sort_by"
             onChange={(e) => {
               setSortBy(e.target.value);
-              handleFilterChange(e);
+              //handleFilterChange(e);
             }}
           >
             <MenuItem value="popularity.desc">Popularity Descending</MenuItem>
