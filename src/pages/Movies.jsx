@@ -33,7 +33,7 @@ const genreMappings = {
   37: "Western",
 };
 
-export function Movies({page}) {
+export function Movies({routerPage}) {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const modalRef = useRef(null);
@@ -41,16 +41,18 @@ export function Movies({page}) {
   const [requestUrl, setRequestUrl] = useState("")
   const [value, setValue] = useState(null);
   const [hover, setHover] = useState(-1);
+  const remainderMovies = useRef([])
   const favorites = useSelector(state => state.favorites.favorites);
   const ratings = useSelector(state => state.ratings.ratings);
   const watchlist = useSelector(state => state.watchlist.watchlist);
   const searchResults = useSelector(state => state.searchResults.searchResults)
   const dispatch = useDispatch();
-  const location = useLocation()
-  console.log(selectedMovie)
+  const location = useLocation();
+  const loadFlag = useRef(false);
+  //console.log(selectedMovie)
   //console.log(favorites.has(String(selectedMovie?.id)))
-  console.log(page)
-  console.log(searchResults)
+  //console.log(page)
+  //console.log(searchResults)
   //console.log(favorites)
 
   useEffect(() => {
@@ -69,7 +71,10 @@ export function Movies({page}) {
         );
 
         const sortedMovies = response.data.results.sort((a, b) => b.vote_average - a.vote_average);
-        setRequestUrl(response.request?.responseURL)
+        const parsedUrl = new URL(response.request?.responseURL);
+        parsedUrl.searchParams.delete("page");
+        const updatedUrl = parsedUrl.toString();
+        setRequestUrl(updatedUrl)
         setMovies(sortedMovies);
         console.log(sortedMovies)
       } catch (error) {
@@ -102,13 +107,88 @@ export function Movies({page}) {
 
         //const sortedMovies = response.data.results.sort((a, b) => b.vote_average - a.vote_average);
         //setMovies(sortedMovies);
-        setRequestUrl(response.request?.responseURL)
+        const parsedUrl = new URL(response.request?.responseURL);
+        parsedUrl.searchParams.delete("page");
+        const updatedUrl = parsedUrl.toString();
+        setRequestUrl(updatedUrl)
         setMovies(response.data.results)
         console.log(sortedMovies)
       } catch (error) {
         console.log("Error fetching movie data:", error);
       }
     };
+
+    const fetchData_nowplaying = async (type) => {
+      try {
+        const currentDate = new Date();
+        const twoMonthsBefore = new Date();
+        twoMonthsBefore.setMonth(twoMonthsBefore.getMonth() - 3);
+    
+        const formattedCurrentDate = currentDate.toISOString().split("T")[0];
+        const formattedTwoMonthsBefore = twoMonthsBefore.toISOString().split("T")[0];
+        
+        const allMovies = [];
+        let urlFlag = false
+        let page = currentPage;
+        let response;
+        while (allMovies.length < 20) {
+          response = await axios.get(
+            `https://api.themoviedb.org/${type}`,
+            {
+              headers: {
+                Authorization: `Bearer ${import.meta.env.VITE_READ_ACCESS_TOKEN}`, // Replace with your actual bearer token
+              },
+              params: {
+                api_key: "YOUR_API_KEY", // Replace with your actual API key
+                "primary_release_date.gte": formattedTwoMonthsBefore,
+                "primary_release_date.lte": formattedCurrentDate,
+                sort_by: "vote_average.desc",
+                "vote_average.lte": 9.9,
+                "vote_count.gte": 5,
+                page: page
+              },
+            }
+          );
+          if (page == 1) {
+            const parsedUrl = new URL(response.request?.responseURL);
+            parsedUrl.searchParams.delete("page");
+            const updatedUrl = parsedUrl.toString();
+            setRequestUrl(updatedUrl)
+            urlFlag = true
+          }
+          const filteredMovies = response.data.results.filter(movie => movie.popularity >= 30);
+          allMovies.push(...filteredMovies);
+          page++;
+    
+          if (response.data.results.length === 0) {
+            // No more movies to fetch, break out of the loop
+            break;
+          }
+        }
+        loadFlag.current = true
+        console.log(page)
+        setCurrentPage(page-1)
+
+        const remainder = allMovies.length % 4;
+        console.log(remainderMovies.current)
+        const newMovies = [...allMovies.slice(0, allMovies.length - remainder)];
+        remainderMovies.current = allMovies.slice(allMovies.length - remainder);
+        console.log(remainderMovies.current)
+        setMovies(newMovies);
+
+        const parsedUrl = new URL(response.request?.responseURL);
+        parsedUrl.searchParams.delete("page");
+        const updatedUrl = parsedUrl.toString();
+        if (!urlFlag) {
+          setRequestUrl(updatedUrl)
+        }
+        console.log(allMovies);
+        console.log(updatedUrl)
+      } catch (error) {
+        console.log("Error fetching movie data:", error);
+      }
+    };
+    
 
     const fetchData_discover = async (type) => {
       try {
@@ -129,13 +209,14 @@ export function Movies({page}) {
     const primaryReleaseDateLte = searchParams.get("primary_release_date.lte");
     const withGenres = searchParams.get("with_genres");
     const voteAverageGte = searchParams.get("vote_average.gte");
+    const voteCountGte = searchParams.get("vote_count.gte");
 
-    if (primaryReleaseDateGte && !searchParams.get("sort_by")) {
-      params["sort_by"] = "vote_average.desc"
-    }
-    if (primaryReleaseDateLte && !searchParams.get("sort_by")) {
-      params["sort_by"] = "vote_average.desc"
-    }
+    // if (primaryReleaseDateGte && !searchParams.get("sort_by")) {
+    //   params["sort_by"] = "vote_average.desc"
+    // }
+    // if (primaryReleaseDateLte && !searchParams.get("sort_by")) {
+    //   params["sort_by"] = "vote_average.desc"
+    // }
     
 
     console.log(primaryReleaseDateGte)
@@ -156,7 +237,11 @@ export function Movies({page}) {
       params["vote_average.gte"] = voteAverageGte;
     }
 
-    params['vote_count.gte'] = 100
+    if (voteCountGte) {
+      params["vote_count.gte"] = voteCountGte;
+    }
+
+    //params['vote_count.gte'] = 100
     
         const response = await axios.get(
           `https://api.themoviedb.org/${type}`,
@@ -170,7 +255,10 @@ export function Movies({page}) {
     
         // Process the response data
         // ...
-        setRequestUrl(response.request?.responseURL)
+        const parsedUrl = new URL(response.request?.responseURL);
+        parsedUrl.searchParams.delete("page");
+        const updatedUrl = parsedUrl.toString();
+        setRequestUrl(updatedUrl)
         setMovies(response.data.results)
       } catch (error) {
         // Handle errors
@@ -178,32 +266,33 @@ export function Movies({page}) {
       }
     };
 
-    if (page === undefined) {
+    if (routerPage === undefined) {
       dispatch({ type: "CLEAR_SEARCH", payload: null });
       //document.getElementById("navbar")?.style.justifyContent = "space-between"
       fetchData_discover('3/discover/movie')
     }
-    else if (page == 'now-playing') {
+    else if (routerPage == 'now-playing') {
       dispatch({ type: "CLEAR_SEARCH", payload: null });
       //document.getElementById("navbar")?.style.justifyContent = "center"
-      fetchData('3/movie/now_playing')
+      //fetchData('3/movie/now_playing')
+      fetchData_nowplaying('3/discover/movie')
     }
-    else if (page == 'upcoming') {
+    else if (routerPage == 'upcoming') {
       dispatch({ type: "CLEAR_SEARCH", payload: null });
       //document.getElementById("navbar")?.style.justifyContent = "center"
       fetchData_upcoming('3/movie/upcoming')
     }
-    else if (page == 'top-movies') {
+    else if (routerPage == 'top-movies') {
       dispatch({ type: "CLEAR_SEARCH", payload: null });
       //document.getElementById("navbar")?.style.justifyContent = "center"
       fetchData('3/movie/top_rated')
     }
-    else if (page == 'discover') {
+    else if (routerPage == 'discover') {
       dispatch({ type: "CLEAR_SEARCH", payload: null });
       //document.getElementById("navbar")?.style.justifyContent = "space-between"
       fetchData_discover('3/discover/movie')
     }
-    else if (page === "favorites") {
+    else if (routerPage === "favorites") {
       console.log(favorites)
       console.log(ratings)
       console.log(Object.values(favorites))
@@ -214,7 +303,7 @@ export function Movies({page}) {
         setMovies(favoritesList);
       }
     }
-    else if (page === "watchlist") {
+    else if (routerPage === "watchlist") {
       dispatch({ type: "CLEAR_SEARCH", payload: null });
       if (watchlist) {
         const watchlist_List = Array.from(watchlist.values());
@@ -222,7 +311,7 @@ export function Movies({page}) {
         setMovies(watchlist_List);
       }
     }
-    else if (page === "ratings") {
+    else if (routerPage === "ratings") {
       dispatch({ type: "CLEAR_SEARCH", payload: null });
       if (ratings) {
         const ratingsList = Array.from(ratings.values());
@@ -230,7 +319,7 @@ export function Movies({page}) {
         setMovies(ratingsList);
       }
     }
-    else if (page === "search") {
+    else if (routerPage === "search") {
       console.log("NEW MOVIES")
       console.log(searchResults)
       if (searchResults) {
@@ -238,7 +327,12 @@ export function Movies({page}) {
         setMovies(searchResults);
       }
     }
-  }, [page, favorites, searchResults, watchlist, ratings, location]);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+    //insert smooth scroll up
+  }, [routerPage, favorites, searchResults, watchlist, ratings, location]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -248,24 +342,58 @@ export function Movies({page}) {
 
   useEffect(()=> {
     const loadMoreMovies = async () => {
-      const response = await axios.get(
-        requestUrl,
-        {
-          headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_READ_ACCESS_TOKEN}`, // Replace with your actual bearer token
-          },
-          params: {
-            page: currentPage
-          },
+      let moreMovies = []
+      let page = currentPage
+      console.log(currentPage)
+      console.log(loadFlag.current)
+      if (loadFlag.current) {
+        loadFlag.current = false
+        return
+      }
+      while (moreMovies.length < 20) {
+        const response = await axios.get(
+          requestUrl,
+          {
+            headers: {
+              Authorization: `Bearer ${import.meta.env.VITE_READ_ACCESS_TOKEN}`, // Replace with your actual bearer token
+            },
+            params: {
+              page: page
+            },
+          }
+        );
+        if (routerPage !== 'now-playing') {
+          setMovies((movies) => [...movies, ...response.data.results])
         }
-      );
-      setMovies([...movies, ...response.data?.results])
+        const filteredMovies = response.data.results.filter(movie => movie.popularity >= 30);
+        moreMovies.push(...filteredMovies);
+        page++
+        console.log(moreMovies)
+        if (page - response.data.total_pages == 1) return
+      }
+      const remainder = (remainderMovies.current.length + moreMovies.length)  % 4;
+      console.log(remainder)
+      const og_movies= moreMovies.slice(moreMovies.length - remainder);
+      const newMovies = [...remainderMovies.current, ...moreMovies.slice(0, moreMovies.length - remainder)];
+      console.log(newMovies)
+      console.log(remainderMovies.current)
+      remainderMovies.current = og_movies.slice(moreMovies.length - remainder);
+      console.log(remainderMovies.current)
+      setMovies((movies) => [...movies, ...newMovies])
+      setCurrentPage(page-1)
+      
+      console.log(page)
+      if (page - currentPage > 1) {
+        loadFlag.current = true
+      }
     }
     (currentPage != 1) && loadMoreMovies()
-    console.log(currentPage)
+    // console.log(currentPage)
   }, [currentPage])
 
   useEffect(()=> {
+    console.log("WHATTTTT")
+    console.log(requestUrl)
     const resetPageNum = () => setCurrentPage(1)
     resetPageNum()
   }, [requestUrl])
@@ -287,6 +415,7 @@ export function Movies({page}) {
     const windowBottom = windowHeight + window.scrollY;
     if (windowBottom >= docHeight - 1) {
       setCurrentPage((page) => page + 1)
+      loadFlag.current = false
     }
   };
 
@@ -443,7 +572,7 @@ export function Movies({page}) {
             })
           )
           dispatch({ type: 'REMOVE_WATCHLIST', payload: {movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId))} });
-          if (page === "watchlist") {
+          if (routerPage === "watchlist") {
             closeModal()
           }
         }}>
@@ -487,7 +616,7 @@ export function Movies({page}) {
             })
           )
           dispatch({ type: 'REMOVE_FAVORITE', payload: {movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId))} });
-          if (page === "favorites") {
+          if (routerPage === "favorites") {
             closeModal()
           }
         }}>
@@ -531,7 +660,7 @@ export function Movies({page}) {
             })
           )
           dispatch({ type: 'REMOVE_RATING', payload: {movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId))} });
-          if (page === "ratings") {
+          if (routerPage === "ratings") {
             closeModal()
           }
         }}>

@@ -85,14 +85,14 @@ function App() {
       <Route path="/register" element={<Register />}/>
     {/* </Route> */}
     {/* <Route element={<ProtectedRoutes/>} > */}
-        <Route path="/search" element={<Movies page="search"/>} />
-        <Route path="/favorites" element={<Base page="favorites"/>}/>
-        <Route path="/watchlist" element={<Base page="watchlist"/>}/>
-        <Route path="/ratings" element={<Base page="ratings"/>}/>
-        <Route path="/now-playing" element={<Movies page="now-playing"/>}/>
-        <Route path="/upcoming" element={<Movies page="upcoming"/>}/>
-        <Route path="/top-movies" element={<Movies page="top-movies"/>}/>
-        <Route path="/discover" element={<Base page="discover"/>}/>
+        <Route path="/search" element={<Movies routerPage="search"/>} />
+        <Route path="/favorites" element={<Base routerPage="favorites"/>}/>
+        <Route path="/watchlist" element={<Base routerPage="watchlist"/>}/>
+        <Route path="/ratings" element={<Base routerPage="ratings"/>}/>
+        <Route path="/now-playing" element={<Movies routerPage="now-playing"/>}/>
+        <Route path="/upcoming" element={<Movies routerPage="upcoming"/>}/>
+        <Route path="/top-movies" element={<Movies routerPage="top-movies"/>}/>
+        <Route path="/discover" element={<Base routerPage="discover"/>}/>
         <Route path="/logout" element={<Logout />} />
     {/* </Route> */}
     <Route path="/moderator" element={<Moderator authUser={authUser} />} />

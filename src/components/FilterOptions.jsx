@@ -34,6 +34,7 @@ const FilterOptions = () => {
   const [earliestDate, setEarliestDate] = useState(null); // Initialize sortBy state
   const [latestDate, setLatestDate] = useState(null); // Initialize sortBy state
   const [selectedGenres, setSelectedGenres] = useState([]); // State for selected genres
+  const [minVoteCount, setMinVoteCount] = useState(0)
   const [minScore, setMinScore] = useState(0);
 
   const handleFilterChange = (name, value) => {
@@ -68,6 +69,11 @@ const FilterOptions = () => {
     setMinScore(value);
     handleFilterChange({ target: { name: "vote_average.gte", value } });
   };
+
+  const handleVoteSliderChange = (event, value) => {
+    setMinVoteCount(value);
+    handleFilterChange({ target: { name: "vote_count.gte", value } });
+  };
   
   const resetFilters = () => {
     setEarliestDate(null);
@@ -75,6 +81,7 @@ const FilterOptions = () => {
     setSortBy("");
     setSelectedGenres([]);
     setMinScore(0);
+    setMinVoteCount(0)
     navigate("", { replace: true });
   };
 
@@ -85,6 +92,7 @@ const FilterOptions = () => {
         setSortBy("");
         setSelectedGenres([]);
         setMinScore(0);
+        setMinVoteCount(0)
       };
     resetFilters()
     console.log("reset")
@@ -106,8 +114,9 @@ const FilterOptions = () => {
   } else {
     setLatestDate(null);
   }
-    setSortBy(searchParams.get("sort_by") || "");
+    setSortBy(searchParams.get("sort_by") || "popularity.desc");
     setMinScore(Number(searchParams.get("vote_average.gte")) || 0);
+    setMinVoteCount(Number(searchParams.get("vote_count.gte")) || 0);
     setSelectedGenres(
       searchParams.get("with_genres")?.split(",")?.map(Number) || []
     );
@@ -150,6 +159,26 @@ const FilterOptions = () => {
             className="slider-value"
             value={minScore}
             onChange={(event) => handleSliderChange(event, event.target.value)}
+          />
+        </div>
+        <div className="slider-container">
+          <div className="slider-label">Min Vote Count</div>
+          <Slider
+            className="slider"
+            value={minVoteCount}
+            onChange={handleVoteSliderChange}
+            step={50}
+            defaultValue={0}
+            marks
+            min={0}
+            max={500}
+            valueLabelDisplay="auto"
+          />
+          <input
+            type="number"
+            className="slider-value"
+            value={minVoteCount}
+            onChange={(event) => handleVoteSliderChange(event, event.target.value)}
           />
         </div>
 
