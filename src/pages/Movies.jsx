@@ -531,6 +531,7 @@ export function Movies({routerPage}) {
                       dispatch({ type: 'ADD_RATING', payload: {movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)), ratingValue: newValue, title: selectedMovie.title,
                         genre: getGenreNames(selectedMovie.genre_ids),
                         poster_path: selectedMovie.poster_path,
+                        vote_average: selectedMovie.vote_average,
                         overview: selectedMovie.overview,
                         backdrop_path: selectedMovie.backdrop_path} });
                       if (value === null) {
@@ -538,6 +539,7 @@ export function Movies({routerPage}) {
                           genre: getGenreNames(selectedMovie.genre_ids),
                           poster_path: selectedMovie.poster_path,
                           overview: selectedMovie.overview,
+                          vote_average: selectedMovie.vote_average,
                           backdrop_path: selectedMovie.backdrop_path}))
                       }
                       else {
@@ -589,6 +591,7 @@ export function Movies({routerPage}) {
                 title: selectedMovie.title,
                 movieId: selectedMovie.id,
                 genre: getGenreNames(selectedMovie.genre_ids),
+                vote_average: selectedMovie.vote_average,
                 poster_path: selectedMovie.poster_path,
                 overview: selectedMovie.overview,
                 backdrop_path: selectedMovie.backdrop_path
@@ -598,6 +601,7 @@ export function Movies({routerPage}) {
               title: selectedMovie.title,
               movieId: String(selectedMovie.id),
               genre: getGenreNames(selectedMovie.genre_ids),
+              vote_average: selectedMovie.vote_average,
               poster_path: selectedMovie.poster_path,
               overview: selectedMovie.overview,
               backdrop_path: selectedMovie.backdrop_path
@@ -635,6 +639,7 @@ export function Movies({routerPage}) {
                 genre: getGenreNames(selectedMovie.genre_ids),
                 poster_path: selectedMovie.poster_path,
                 overview: selectedMovie.overview,
+                vote_average: selectedMovie.vote_average,
                 backdrop_path: selectedMovie.backdrop_path
               })
             );
@@ -644,6 +649,7 @@ export function Movies({routerPage}) {
               genre: getGenreNames(selectedMovie.genre_ids),
               poster_path: selectedMovie.poster_path,
               overview: selectedMovie.overview,
+              vote_average: selectedMovie.vote_average,
               backdrop_path: selectedMovie.backdrop_path
             } });
             }}
