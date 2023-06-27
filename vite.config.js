@@ -17,6 +17,7 @@ export default defineConfig({
       "/movies/remove-rating": "http://localhost:3000",
       "/movies/add-watchlist": "http://localhost:3000",
       "/movies/remove-watchlist": "http://localhost:3000",
+      "/movies/now-playing": "http://localhost:3000",
     },
   },
   plugins: [react()],  //need this for some rzn

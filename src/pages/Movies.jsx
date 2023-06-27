@@ -129,7 +129,7 @@ export function Movies({routerPage}) {
         
         const allMovies = [];
         let urlFlag = false
-        let page = currentPage;
+        let page = 1;
         let response;
         while (allMovies.length < 20) {
           response = await axios.get(
@@ -275,7 +275,24 @@ export function Movies({routerPage}) {
       dispatch({ type: "CLEAR_SEARCH", payload: null });
       //document.getElementById("navbar")?.style.justifyContent = "center"
       //fetchData('3/movie/now_playing')
-      fetchData_nowplaying('3/discover/movie')
+
+      const fetchRedis = async () => {
+        try {
+          const redisResponse = await axios.get('movies/now-playing', {
+            timeout: 300, // Set the timeout value in milliseconds
+          });
+      
+          console.log(redisResponse)
+          setMovies(redisResponse.data)
+          setCurrentPage(-1)
+        } catch (error) {
+          console.log(error)
+          fetchData_nowplaying('3/discover/movie')
+        }
+
+      }
+      fetchRedis()
+      //fetchData_nowplaying('3/discover/movie')
     }
     else if (routerPage == 'upcoming') {
       dispatch({ type: "CLEAR_SEARCH", payload: null });
@@ -346,7 +363,7 @@ export function Movies({routerPage}) {
       let page = currentPage
       console.log(currentPage)
       console.log(loadFlag.current)
-      if (loadFlag.current) {
+      if (loadFlag.current || currentPage === -1) {
         loadFlag.current = false
         return
       }
@@ -397,7 +414,7 @@ export function Movies({routerPage}) {
     console.log(requestUrl)
     const resetPageNum = () => setCurrentPage(1)
     resetPageNum()
-  }, [requestUrl])
+  }, [requestUrl, location])
 
   const handleScroll = () => {
     const windowHeight =
