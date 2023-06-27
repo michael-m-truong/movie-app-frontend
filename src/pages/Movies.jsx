@@ -279,7 +279,7 @@ export function Movies({routerPage}) {
       const fetchRedis = async () => {
         try {
           const redisResponse = await axios.get('movies/now-playing', {
-            timeout: 200, // Set the timeout value in milliseconds
+            timeout: 20, // Set the timeout value in milliseconds
           });
       
           console.log(redisResponse)
