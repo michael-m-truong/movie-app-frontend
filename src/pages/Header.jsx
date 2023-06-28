@@ -23,7 +23,7 @@ export function Header({ authUser }) {
 
   useEffect(() => {
     // Remove the 'selected' class from all nav items
-    console.log("here")
+    //console.log("here")
     const navItems = document.getElementsByClassName("nav-item");
     for (let i = 0; i < navItems.length; i++) {
       navItems[i].classList.remove("selected");
@@ -31,7 +31,7 @@ export function Header({ authUser }) {
 
     // Add the 'selected' class to the nav item matching the current location
     const currentItem = document.querySelector(`.nav-item a[href="${location.pathname}"]`);
-    console.log(currentItem)
+    //console.log(currentItem)
     if (currentItem) {
       currentItem.parentElement.classList.add("selected");
     }
@@ -41,10 +41,10 @@ export function Header({ authUser }) {
     const fetchData = async () => {
       // Get the search query from the URL parameters
       const searchTitle = new URLSearchParams(window.location.search).get("title");
-      console.log(searchTitle)
+      //console.log(searchTitle)
       if (searchTitle) {
         try {
-          console.log("here")
+          //console.log("here")
           const response = await axios.get(
             "https://api.themoviedb.org/3/search/movie",
             {
@@ -61,9 +61,9 @@ export function Header({ authUser }) {
           );
           // Dispatch the search results to Redux store
           dispatch({ type: "INITIALIZE_SEARCH_RESULTS", payload: response.data.results });
-          console.log(response)
+          //console.log(response)
         } catch (error) {
-          console.log("Error fetching movie data:", error);
+          //console.log("Error fetching movie data:", error);
         }
       }
     }
@@ -71,7 +71,7 @@ export function Header({ authUser }) {
   }, [window.location.search]);
 
   useEffect(() => {
-    console.log("here")
+    //console.log("here")
     if (searchResults === null) return
     setSearchQuery("");
   }, [location.pathname]);

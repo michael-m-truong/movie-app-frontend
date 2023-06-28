@@ -38,7 +38,9 @@ export function Movies({routerPage}) {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const modalRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1)
+  const currentPage_ref = useRef(1)
   const [requestUrl, setRequestUrl] = useState("")
+  const requestUrl_ref = useRef()
   const [value, setValue] = useState(null);
   const [hover, setHover] = useState(-1);
   const remainderMovies = useRef([])
@@ -49,6 +51,10 @@ export function Movies({routerPage}) {
   const dispatch = useDispatch();
   const location = useLocation();
   const loadFlag = useRef(false);
+  const routerPage_ref = useRef(routerPage)
+
+  console.log(requestUrl)
+  console.log(routerPage)
   //console.log(selectedMovie)
   //console.log(favorites.has(String(selectedMovie?.id)))
   //console.log(page)
@@ -74,6 +80,8 @@ export function Movies({routerPage}) {
         const parsedUrl = new URL(response.request?.responseURL);
         parsedUrl.searchParams.delete("page");
         const updatedUrl = parsedUrl.toString();
+        console.log(updatedUrl)
+        requestUrl_ref.current = updatedUrl
         setRequestUrl(updatedUrl)
         setMovies(sortedMovies);
         console.log(sortedMovies)
@@ -110,6 +118,8 @@ export function Movies({routerPage}) {
         const parsedUrl = new URL(response.request?.responseURL);
         parsedUrl.searchParams.delete("page");
         const updatedUrl = parsedUrl.toString();
+        console.log(updatedUrl)
+        requestUrl_ref.current = updatedUrl
         setRequestUrl(updatedUrl)
         setMovies(response.data.results)
         console.log(sortedMovies)
@@ -153,11 +163,14 @@ export function Movies({routerPage}) {
             const parsedUrl = new URL(response.request?.responseURL);
             parsedUrl.searchParams.delete("page");
             const updatedUrl = parsedUrl.toString();
+            console.log(updatedUrl)
+            requestUrl_ref.current = updatedUrl
             setRequestUrl(updatedUrl)
             urlFlag = true
           }
           const filteredMovies = response.data.results.filter(movie => movie.popularity >= 30);
           allMovies.push(...filteredMovies);
+          setMovies(allMovies);
           page++;
     
           if (response.data.results.length === 0) {
@@ -165,8 +178,9 @@ export function Movies({routerPage}) {
             break;
           }
         }
-        loadFlag.current = true
+        // loadFlag.current = true
         console.log(page)
+        currentPage_ref.current = page - 1
         setCurrentPage(page-1)
 
         const remainder = allMovies.length % 4;
@@ -180,6 +194,7 @@ export function Movies({routerPage}) {
         parsedUrl.searchParams.delete("page");
         const updatedUrl = parsedUrl.toString();
         if (!urlFlag) {
+          requestUrl_ref.current = updatedUrl
           setRequestUrl(updatedUrl)
         }
         console.log(allMovies);
@@ -258,6 +273,8 @@ export function Movies({routerPage}) {
         const parsedUrl = new URL(response.request?.responseURL);
         parsedUrl.searchParams.delete("page");
         const updatedUrl = parsedUrl.toString();
+        console.log(updatedUrl)
+        requestUrl_ref.current = updatedUrl
         setRequestUrl(updatedUrl)
         setMovies(response.data.results)
       } catch (error) {
@@ -268,18 +285,21 @@ export function Movies({routerPage}) {
 
     if (routerPage === undefined) {
       dispatch({ type: "CLEAR_SEARCH", payload: null });
+      console.log('mymom')
+      routerPage_ref.current = routerPage
       //document.getElementById("navbar")?.style.justifyContent = "space-between"
       fetchData_discover('3/discover/movie')
     }
     else if (routerPage == 'now-playing') {
       dispatch({ type: "CLEAR_SEARCH", payload: null });
+      routerPage_ref.current = routerPage
       //document.getElementById("navbar")?.style.justifyContent = "center"
       //fetchData('3/movie/now_playing')
 
       const fetchRedis = async () => {
         try {
           const redisResponse = await axios.get('movies/now-playing', {
-            timeout: 20, // Set the timeout value in milliseconds
+            timeout: 5, // Set the timeout value in milliseconds
           });
       
           console.log(redisResponse)
@@ -296,16 +316,19 @@ export function Movies({routerPage}) {
     }
     else if (routerPage == 'upcoming') {
       dispatch({ type: "CLEAR_SEARCH", payload: null });
+      routerPage_ref.current = routerPage
       //document.getElementById("navbar")?.style.justifyContent = "center"
       fetchData_upcoming('3/movie/upcoming')
     }
     else if (routerPage == 'top-movies') {
       dispatch({ type: "CLEAR_SEARCH", payload: null });
+      routerPage_ref.current = routerPage
       //document.getElementById("navbar")?.style.justifyContent = "center"
       fetchData('3/movie/top_rated')
     }
     else if (routerPage == 'discover') {
       dispatch({ type: "CLEAR_SEARCH", payload: null });
+      routerPage_ref.current = routerPage
       //document.getElementById("navbar")?.style.justifyContent = "space-between"
       fetchData_discover('3/discover/movie')
     }
@@ -348,28 +371,35 @@ export function Movies({routerPage}) {
       top: 0,
       behavior: 'smooth',
     });
-    //insert smooth scroll up
-  }, [routerPage, favorites, searchResults, watchlist, ratings, location]);
+  }, [routerPage, /*favorites, searchResults, watchlist, ratings,*/ location]);
 
   useEffect(() => {
+    console.log("HEREEEEEEE")
     window.addEventListener("scroll", handleScroll);
     // cleanup function
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(()=> {
+  useEffect(() => {
+    console.log(requestUrl)
+  }, [requestUrl]);
+
+  
     const loadMoreMovies = async () => {
       let moreMovies = []
-      let page = currentPage
-      console.log(currentPage)
+      let page = currentPage_ref.current
+      //console.log(currentPage)
+      //console.log(page)
       console.log(loadFlag.current)
-      if (loadFlag.current || currentPage === -1) {
-        loadFlag.current = false
+      //console.log(requestUrl)
+      //console.log(requestUrl_ref.current)
+      if (loadFlag.current) {
         return
       }
+      loadFlag.current = true
       while (moreMovies.length < 20) {
         const response = await axios.get(
-          requestUrl,
+          requestUrl_ref.current,
           {
             headers: {
               Authorization: `Bearer ${import.meta.env.VITE_READ_ACCESS_TOKEN}`, // Replace with your actual bearer token
@@ -379,15 +409,24 @@ export function Movies({routerPage}) {
             },
           }
         );
-        if (routerPage !== 'now-playing') {
+        console.log("response done")
+        if (page > response.data.total_pages) {
+          return
+        }
+        console.log(routerPage_ref.current)
+        if (routerPage_ref.current !== 'now-playing') {
+          console.log("this is a test")
           setMovies((movies) => [...movies, ...response.data.results])
           return
+        }
+        else {
+          console.log(routerPage)
         }
         const filteredMovies = response.data.results.filter(movie => movie.popularity >= 30);
         moreMovies.push(...filteredMovies);
         page++
         console.log(moreMovies)
-        if (page - response.data.total_pages == 1) return
+        if (page > response.data.total_pages) return
       }
       const remainder = (remainderMovies.current.length + moreMovies.length)  % 4;
       console.log(remainder)
@@ -398,25 +437,27 @@ export function Movies({routerPage}) {
       remainderMovies.current = og_movies.slice(moreMovies.length - remainder);
       console.log(remainderMovies.current)
       setMovies((movies) => [...movies, ...newMovies])
+      currentPage_ref.current = page - 1
       setCurrentPage(page-1)
       
+      
       console.log(page)
-      if (page - currentPage > 1) {
+      if (page - currentPage_ref.current > 1) {
         loadFlag.current = true
       }
     }
-    (currentPage != 1) && loadMoreMovies()
-    // console.log(currentPage)
-  }, [currentPage])
+    
 
   useEffect(()=> {
     console.log("WHATTTTT")
     console.log(requestUrl)
     const resetPageNum = () => setCurrentPage(1)
     resetPageNum()
+    currentPage_ref.current = 1
+    loadFlag.current = false
   }, [requestUrl, location])
 
-  const handleScroll = () => {
+  const handleScroll = async () => {
     const windowHeight =
       "innerHeight" in window
         ? window.innerHeight
@@ -431,9 +472,11 @@ export function Movies({routerPage}) {
       html.offsetHeight
     );
     const windowBottom = windowHeight + window.scrollY;
-    if (windowBottom >= docHeight - 1) {
-      setCurrentPage((page) => page + 1)
+    if (windowBottom >= docHeight - 1 && !loadFlag.current) {
+      currentPage_ref.current = currentPage_ref.current + 1
+      await loadMoreMovies()
       loadFlag.current = false
+      console.log('NOT GOOD')
     }
   };
 
