@@ -39,3 +39,8 @@ export const remove_watchlistService = (data) => instance.post(
     "movies/remove-watchlist", 
     data,
 )
+
+export const getStats_Service = () => instance.get(
+    "movies/discover-stats",
+    null
+)

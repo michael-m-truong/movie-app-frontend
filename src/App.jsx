@@ -92,7 +92,7 @@ function App() {
         <Route path="/now-playing" element={<Movies routerPage="now-playing"/>}/>
         <Route path="/upcoming" element={<Movies routerPage="upcoming"/>}/>
         <Route path="/top-movies" element={<Movies routerPage="top-movies"/>}/>
-        <Route path="/discover" element={<Base routerPage="discover"/>}/>
+        <Route path="/discover" element={<Movies routerPage="discover"/>}/>
         <Route path="/logout" element={<Logout />} />
     {/* </Route> */}
     <Route path="/moderator" element={<Moderator authUser={authUser} />} />

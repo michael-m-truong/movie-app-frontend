@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Fragment } from "react";
 import { Link, Route, Routes, useLocation } from "react-router-dom";
 import axios from "axios";
 import "../assets/css/movies.css";
@@ -122,7 +122,7 @@ export function Movies({routerPage}) {
         requestUrl_ref.current = updatedUrl
         setRequestUrl(updatedUrl)
         setMovies(response.data.results)
-        console.log(sortedMovies)
+        //console.log(sortedMovies)
       } catch (error) {
         console.log("Error fetching movie data:", error);
       }
@@ -283,6 +283,35 @@ export function Movies({routerPage}) {
       }
     };
 
+    const fetchStats= async () =>{
+      try {
+        const response = await api.movies.getStats()
+        let movieStats = []
+        movieStats.push(response.data.stats.mostFavoritedMovie.movies.movie)
+        movieStats[0].count = response.data.stats.mostFavoritedMovie.movies.favoriteCount
+        movieStats[0].stat = "Most favorited"
+
+        movieStats.push(response.data.stats.mostWatchlistedMovie.movies.movie)
+        movieStats[1].count = response.data.stats.mostWatchlistedMovie.movies.watchlistCount
+        movieStats[1].stat = "Most watchlisted"
+
+        movieStats.push(response.data.stats.mostRatedMovie.movieDetails)
+        movieStats[2].count = response.data.stats.mostRatedMovie.ratingCount
+        movieStats[2].stat = "Most rated"
+        //const sortedMovies = response.data.results.sort((a, b) => b.vote_average - a.vote_average);
+        //const parsedUrl = new URL(response.request?.responseURL);
+        //parsedUrl.searchParams.delete("page");
+        //const updatedUrl = parsedUrl.toString();
+        //console.log(updatedUrl)
+        //requestUrl_ref.current = updatedUrl
+        //setRequestUrl(updatedUrl)
+        setMovies(movieStats);
+        console.log(movieStats)
+      } catch (error) {
+        console.log("Error fetching movie data:", error);
+      }
+    }
+
     if (routerPage === undefined) {
       dispatch({ type: "CLEAR_SEARCH", payload: null });
       console.log('mymom')
@@ -330,7 +359,8 @@ export function Movies({routerPage}) {
       dispatch({ type: "CLEAR_SEARCH", payload: null });
       routerPage_ref.current = routerPage
       //document.getElementById("navbar")?.style.justifyContent = "space-between"
-      fetchData_discover('3/discover/movie')
+      //fetchData_discover('3/discover/movie')
+      fetchStats()
     }
     else if (routerPage === "search") {
       console.log("NEW MOVIES")
@@ -344,7 +374,7 @@ export function Movies({routerPage}) {
       top: 0,
       behavior: 'smooth',
     });
-  }, [routerPage, /*favorites, searchResults, watchlist, ratings,*/ location]);
+  }, [routerPage, /*favorites, searchResults, watchlist, ratings,*/ location, searchResults]);
 
   useEffect(()=>{
     if (routerPage === "favorites") {
@@ -478,7 +508,7 @@ export function Movies({routerPage}) {
       html.offsetHeight
     );
     const windowBottom = windowHeight + window.scrollY;
-    if (windowBottom >= docHeight - 1 && !loadFlag.current && !['watchlist', 'favorites', 'ratings'].includes(routerPage_ref.current)) {
+    if (windowBottom >= docHeight - 1 && !loadFlag.current && !['watchlist', 'favorites', 'ratings', 'discover'].includes(routerPage_ref.current)) {
       console.log(routerPage_ref.current)
       currentPage_ref.current = currentPage_ref.current + 1
       await loadMoreMovies()
@@ -532,7 +562,7 @@ export function Movies({routerPage}) {
 
   return (
     <>
-      <div className="movie-grid">
+      {routerPage != 'discover' ? <div className="movie-grid">
         {movies.map((movie) => (
           <div key={movie.id ? movie.id : movie.movieId } className="movie-card" onClick={() => openModal(movie)}>
             <img
@@ -545,6 +575,33 @@ export function Movies({routerPage}) {
           </div>
         ))}
       </div>
+      
+      :
+
+      <div className="movie-grid">
+      {movies.map((movie) => (
+        <Fragment key={movie.stat}>
+        <div key={movie.stat } className="movie-card" onClick={() => openModal(movie)}>
+        <br/>
+        <div style={{ display: 'flex', textAlign: "left", flexDirection: 'column', justifyContent: 'center', alignItems: "center"}}>
+        <h2 className="movie-stat-title" style={{ width: 'calc(50% - 20px)', margin: '20px 0' }}>{movie.stat}</h2>
+        <h2 className="movie-stat-title" style={{ width: 'calc(50% - 20px)', margin: '20px 0' }}>{movie.count} users</h2>
+        </div>
+      </div>
+
+        <div key={movie.movieId + " " + movie.stat } className="movie-card" onClick={() => openModal(movie)}>
+          <img
+            src={`https://image.tmdb.org/t/p/w400/${movie.poster_path}`}
+            alt={movie.title}
+            className="movie-poster"
+            width={200}
+          />
+          <h2 className="movie-title">{movie.title}</h2>
+        </div>
+        </Fragment>
+      ))}
+    </div>}
+
 
       {selectedMovie && (
   <div className="modal" onClick={closeModal} id="mod">
