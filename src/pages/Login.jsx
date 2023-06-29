@@ -7,13 +7,30 @@ import { api } from '../axios/axiosConfig';
 import Cookies from "universal-cookie";
 import axios from 'axios';
 import { store } from '../App';
+import { useSelector, useDispatch } from 'react-redux';
 
 export function Login() {
 
+    const dispatch = useDispatch()
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loginCheck, setLoginCheck] = useState();
+
+    const getUserMovieData = async () => {
+      try {
+        let getUserMovieData_response = await api.movies.read_all()
+        console.log(getUserMovieData_response.data.user)
+        dispatch({ type: "INITIALIZE_FAVORITES", payload: Object.entries(getUserMovieData_response.data.user.favorites)})
+        dispatch({ type: "INITIALIZE_RATINGS", payload: Object.entries(getUserMovieData_response.data.user.ratings)})
+        dispatch({ type: "INITIALIZE_WATCHLIST", payload: Object.entries(getUserMovieData_response.data.user.watchlist)})
+      }
+      catch (error) {
+        console.log(error)
+        dispatch({ type: "SYNC_FAIL"})
+        throw error
+      }
+    }
 
     const handleLogin = async (e) => {
         // prevent form from refreshing whole page
@@ -33,6 +50,7 @@ export function Login() {
             // });
             // console.log(response_proxy)
             let auth_response = await api.auth.isLoggedIn()  // use this
+            await getUserMovieData()
             console.log(auth_response)
             setLoginCheck("Login successful")
             store.dispatch({ type: "LOGGED_IN"})

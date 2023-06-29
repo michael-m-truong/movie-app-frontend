@@ -332,33 +332,6 @@ export function Movies({routerPage}) {
       //document.getElementById("navbar")?.style.justifyContent = "space-between"
       fetchData_discover('3/discover/movie')
     }
-    else if (routerPage === "favorites") {
-      console.log(favorites)
-      console.log(ratings)
-      console.log(Object.values(favorites))
-      dispatch({ type: "CLEAR_SEARCH", payload: null });
-      if (favorites) {
-        const favoritesList = Array.from(favorites.values());
-        console.log(favoritesList)
-        setMovies(favoritesList);
-      }
-    }
-    else if (routerPage === "watchlist") {
-      dispatch({ type: "CLEAR_SEARCH", payload: null });
-      if (watchlist) {
-        const watchlist_List = Array.from(watchlist.values());
-        console.log(watchlist_List)
-        setMovies(watchlist_List);
-      }
-    }
-    else if (routerPage === "ratings") {
-      dispatch({ type: "CLEAR_SEARCH", payload: null });
-      if (ratings) {
-        const ratingsList = Array.from(ratings.values());
-        console.log(ratingsList)
-        setMovies(ratingsList);
-      }
-    }
     else if (routerPage === "search") {
       console.log("NEW MOVIES")
       console.log(searchResults)
@@ -372,6 +345,39 @@ export function Movies({routerPage}) {
       behavior: 'smooth',
     });
   }, [routerPage, /*favorites, searchResults, watchlist, ratings,*/ location]);
+
+  useEffect(()=>{
+    if (routerPage === "favorites") {
+      routerPage_ref.current = routerPage
+      console.log(favorites)
+      console.log(ratings)
+      console.log(Object.values(favorites))
+      dispatch({ type: "CLEAR_SEARCH", payload: null });
+      if (favorites) {
+        const favoritesList = Array.from(favorites.values());
+        console.log(favoritesList)
+        setMovies(favoritesList);
+      }
+    }
+    else if (routerPage === "watchlist") {
+      routerPage_ref.current = routerPage
+      dispatch({ type: "CLEAR_SEARCH", payload: null });
+      if (watchlist) {
+        const watchlist_List = Array.from(watchlist.values());
+        console.log(watchlist_List)
+        setMovies(watchlist_List);
+      }
+    }
+    else if (routerPage === "ratings") {
+      routerPage_ref.current = routerPage
+      dispatch({ type: "CLEAR_SEARCH", payload: null });
+      if (ratings) {
+        const ratingsList = Array.from(ratings.values());
+        console.log(ratingsList)
+        setMovies(ratingsList);
+      }
+    }
+  }, [favorites, ratings, watchlist, routerPage])
 
   useEffect(() => {
     console.log("HEREEEEEEE")
@@ -472,7 +478,8 @@ export function Movies({routerPage}) {
       html.offsetHeight
     );
     const windowBottom = windowHeight + window.scrollY;
-    if (windowBottom >= docHeight - 1 && !loadFlag.current) {
+    if (windowBottom >= docHeight - 1 && !loadFlag.current && !['watchlist', 'favorites', 'ratings'].includes(routerPage_ref.current)) {
+      console.log(routerPage_ref.current)
       currentPage_ref.current = currentPage_ref.current + 1
       await loadMoreMovies()
       loadFlag.current = false
