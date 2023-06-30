@@ -1,0 +1,4 @@
+.PhoneInputInput {
+    border: none; /* Remove the default border */
+    outline: none; /* Remove the outline when the input is focused */
+  }

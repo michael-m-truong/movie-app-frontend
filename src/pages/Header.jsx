@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import "../assets/css/header.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import {  useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from "react-router-dom"
@@ -30,12 +30,17 @@ export function Header({ authUser }) {
     }
 
     // Add the 'selected' class to the nav item matching the current location
+    console.log(location.pathname)
+    if (location.pathname === '/') {
+      return
+    }
     const currentItem = document.querySelector(`.nav-item a[href="${location.pathname}"]`);
+    console.log(currentItem)
     //console.log(currentItem)
     if (currentItem) {
       currentItem.parentElement.classList.add("selected");
     }
-  }, [location.pathname]);
+  }, );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -128,14 +133,24 @@ export function Header({ authUser }) {
 }
 
 const AuthenticatedLinks = () => {
-  const [isHovered, setIsHovered] = useState(false);
+  const [isHovered, setIsHovered] = useState([]);
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
+  const handleMouseEnter = (type) => {
+    if (type === 'lists') {
+      setIsHovered((state) => [true, state[1]]);
+    }
+    else if (type === 'profile') {
+      setIsHovered((state) => [state[0], true]);
+    }
   };
 
-  const handleMouseLeave = () => {
-    setIsHovered(false);
+  const handleMouseLeave = (type) => {
+    if (type === 'lists') {
+      setIsHovered((state) => [false, state[1]]);
+    }
+    else if (type === 'profile') {
+      setIsHovered((state) => [state[0], false]);
+    }
   };
 
   const navigate = useNavigate()
@@ -149,9 +164,9 @@ const AuthenticatedLinks = () => {
   return (
     <>
       <li
-        className={`nav-item top ${isHovered ? "show-dropdown" : ""}`}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        className={`nav-item top ${isHovered[0] ? "show-dropdown" : ""}`}
+        onMouseEnter={() => handleMouseEnter("lists")}
+        onMouseLeave={() => handleMouseLeave("lists")}
       >
         <span className="nav-link">My Lists</span>
         <div className={`dropdown-menu ${isHovered ? "show" : ""}`}>
@@ -174,9 +189,30 @@ const AuthenticatedLinks = () => {
           </ul>
         </div>
       </li>
-      <li className="nav-item top nav-link" onClick={logout}>
-        Signout
+
+      <li
+        className={`nav-item top ${isHovered[1] ? "show-dropdown" : ""}`}
+        onMouseEnter={() => handleMouseEnter("profile")}
+        onMouseLeave={() => handleMouseLeave("profile")}
+      >
+        <span className="nav-link">Profile</span>
+        <div className={`dropdown-menu ${isHovered ? "show" : ""}`}>
+          <ul className="dropdown-list">
+          <li className="nav-item top">
+              <Link to="/edit-profile" className="dropdown-link">
+                Edit profile
+              </Link>
+            </li>
+            <li className="nav-item top"  onClick={logout}>
+              <Link to="/" className="dropdown-link">
+                Sign out
+              </Link>
+            </li>
+            
+          </ul>
+        </div>
       </li>
+
     </>
   );
 };

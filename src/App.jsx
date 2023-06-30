@@ -21,12 +21,13 @@ import { Header } from './pages/Header'
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { Stats } from './pages/Stats'
+import { Profile } from './pages/Profile'
 
 async function authUser(dispatch) {
   try {
     let auth_response = await api.auth.isLoggedIn()
     console.log('auth test')
-    dispatch({ type: "LOGGED_IN"})
+    dispatch({ type: "LOGGED_IN", payload: auth_response.data.username})
   }
   catch (error) {
     console.log(error)
@@ -94,6 +95,7 @@ function App() {
         <Route path="/upcoming" element={<Movies routerPage="upcoming"/>}/>
         <Route path="/top-movies" element={<Movies routerPage="top-movies"/>}/>
         <Route path="/discover" element={<Stats routerPage="discover"/>}/>
+        <Route path="/edit-profile" element={<Profile routerPage="profile"/>}/>
         <Route path="/logout" element={<Logout />} />
     {/* </Route> */}
     <Route path="/moderator" element={<Moderator authUser={authUser} />} />
