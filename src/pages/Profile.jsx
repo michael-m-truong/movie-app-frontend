@@ -2,15 +2,16 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import '../assets/css/Form.css'
 import { useNavigate } from "react-router-dom"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from '../axios/axiosConfig';
 import Cookies from "universal-cookie";
 import axios from 'axios';
 import { store } from '../App';
 import { useSelector, useDispatch } from 'react-redux';
 import 'react-phone-number-input/style.css'
-import PhoneInput from 'react-phone-number-input'
+import PhoneInput, {isPossiblePhoneNumber} from 'react-phone-number-input'
 import '../assets/css/Profile.css'
+
 
 export function Profile() {
 
@@ -18,21 +19,28 @@ export function Profile() {
     const navigate = useNavigate();
     const [password, setPassword] = useState("random characters");
     const username = useSelector(state => state.user.username);
-    const [phoneNumber, setPhoneNumber] = useState()
-    console.log(username)
+    const user_phoneNumber = useSelector(state => state.user.phoneNumber);
+    const user = useSelector(state => state.user);
 
-    const getUserMovieData = async () => {
+    console.log(user)
+
+    const [phoneNumber, setPhoneNumber] = useState()
+
+    useEffect(() => {
+      setPhoneNumber(user_phoneNumber)
+    }, [user_phoneNumber])
+    
+
+    const updatePhoneNumber = async () => {
       try {
-        let getUserMovieData_response = await api.movies.read_all()
-        console.log(getUserMovieData_response.data.user)
-        dispatch({ type: "INITIALIZE_FAVORITES", payload: Object.entries(getUserMovieData_response.data.user.favorites)})
-        dispatch({ type: "INITIALIZE_RATINGS", payload: Object.entries(getUserMovieData_response.data.user.ratings)})
-        dispatch({ type: "INITIALIZE_WATCHLIST", payload: Object.entries(getUserMovieData_response.data.user.watchlist)})
+        if (!isPossiblePhoneNumber(phoneNumber)) {
+          return
+        }
+        api.auth.updateNumber({updatedPhoneNumber: phoneNumber})
+        dispatch({type: 'UPDATE_PHONE', payload: phoneNumber})
       }
       catch (error) {
-        console.log(error)
-        dispatch({ type: "SYNC_FAIL"})
-        throw error
+
       }
     }
 
@@ -64,25 +72,23 @@ export function Profile() {
             <Form.Group className="mb-3">
               <Form.Label>Phone Number</Form.Label>
               <PhoneInput
-      placeholder="Enter phone number"
-      value={phoneNumber}
-      onChange={setPhoneNumber}
-      className='form-control'/>
+              placeholder="Enter phone number"
+              value={phoneNumber}
+              onChange={setPhoneNumber}
+              className='form-control'/>
             </Form.Group>
 
             <br/>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <Button
                 variant="primary"
-                type="submit"
-                onClick={(e) => handleLogin(e)}
+                onClick={() => setPhoneNumber(user_phoneNumber)}
               >
                 Cancel
               </Button>
               <Button
                 variant="primary"
-                type="submit"
-                onClick={(e) => handleLogin(e)}
+                onClick={updatePhoneNumber}
               >
                 Save Changes
               </Button>

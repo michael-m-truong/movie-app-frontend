@@ -27,7 +27,8 @@ async function authUser(dispatch) {
   try {
     let auth_response = await api.auth.isLoggedIn()
     console.log('auth test')
-    dispatch({ type: "LOGGED_IN", payload: auth_response.data.username})
+    console.log(auth_response)
+    dispatch({ type: "LOGGED_IN", payload: auth_response.data})
   }
   catch (error) {
     console.log(error)

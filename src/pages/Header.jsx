@@ -40,7 +40,7 @@ export function Header({ authUser }) {
     if (currentItem) {
       currentItem.parentElement.classList.add("selected");
     }
-  }, );
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -169,7 +169,7 @@ const AuthenticatedLinks = () => {
         onMouseLeave={() => handleMouseLeave("lists")}
       >
         <span className="nav-link">My Lists</span>
-        <div className={`dropdown-menu ${isHovered ? "show" : ""}`}>
+        <div className={`dropdown-menu ${isHovered[0] ? "show" : ""}`}>
           <ul className="dropdown-list">
             <li className="nav-item top">
               <Link to="/watchlist" className="dropdown-link">
@@ -196,7 +196,7 @@ const AuthenticatedLinks = () => {
         onMouseLeave={() => handleMouseLeave("profile")}
       >
         <span className="nav-link">Profile</span>
-        <div className={`dropdown-menu ${isHovered ? "show" : ""}`}>
+        <div className={`dropdown-menu ${isHovered[1] ? "show" : ""}`}>
           <ul className="dropdown-list">
           <li className="nav-item top">
               <Link to="/edit-profile" className="dropdown-link">

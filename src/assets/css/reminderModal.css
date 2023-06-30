@@ -1,0 +1,8 @@
+.modal-backdrop {
+    --bs-backdrop-bg: transparent !important;
+    --bs-backdrop-zindex: 0 !important;
+}
+
+.modal-content {
+    z-index: 2000 !important;
+}

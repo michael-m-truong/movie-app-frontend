@@ -53,7 +53,7 @@ export function Login() {
             await getUserMovieData()
             console.log(auth_response)
             setLoginCheck("Login successful")
-            store.dispatch({ type: "LOGGED_IN"})
+            store.dispatch({ type: "LOGGED_IN", payload: auth_response.data})
             navigate("/")
             
         }

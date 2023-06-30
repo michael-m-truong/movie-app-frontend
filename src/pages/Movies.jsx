@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import StarIcon from '@mui/icons-material/Star';
 import { api } from "../axios/axiosConfig";
 import { useSelector, useDispatch } from 'react-redux';
+import ReminderModal from "../components/ReminderModal";
 
 
 // Define the genre mappings
@@ -52,6 +53,7 @@ export function Movies({routerPage}) {
   const location = useLocation();
   const loadFlag = useRef(false);
   const routerPage_ref = useRef(routerPage)
+  const [showReminderModal, setShowReminderModal] = useState(false);
 
   console.log(requestUrl)
   console.log(routerPage)
@@ -565,6 +567,10 @@ export function Movies({routerPage}) {
     return currentDate < releaseDate
   }
 
+
+  const handleClose = () => setShowReminderModal(false);
+  const handleShow = () => setShowReminderModal(true);
+
   return (
     <>
       {routerPage != 'discover' ? <div className="movie-grid">
@@ -716,34 +722,16 @@ export function Movies({routerPage}) {
           Cancel Reminder
         </Button>
       ) : (
+        <>
         <Button
           variant="contained"
           className="modal-action-button"
-          onClick={() => {
-            api.movies.add_watchlist(
-              JSON.stringify({
-                title: selectedMovie.title,
-                movieId: selectedMovie.id,
-                genre: getGenreNames(selectedMovie.genre_ids),
-                vote_average: selectedMovie.vote_average,
-                poster_path: selectedMovie.poster_path,
-                overview: selectedMovie.overview,
-                backdrop_path: selectedMovie.backdrop_path
-              })
-            );
-            dispatch({ type: 'ADD_WATCHLIST', payload: {
-              title: selectedMovie.title,
-              movieId: String(selectedMovie.id),
-              genre: getGenreNames(selectedMovie.genre_ids),
-              vote_average: selectedMovie.vote_average,
-              poster_path: selectedMovie.poster_path,
-              overview: selectedMovie.overview,
-              backdrop_path: selectedMovie.backdrop_path
-            } });
-            }}
+          onClick={handleShow}
         >
           Create Reminder
         </Button>
+         {showReminderModal && <ReminderModal closeModal={handleClose} />}
+         </>
       )}
 
 
@@ -786,7 +774,8 @@ export function Movies({routerPage}) {
               vote_average: selectedMovie.vote_average,
               poster_path: selectedMovie.poster_path,
               overview: selectedMovie.overview,
-              backdrop_path: selectedMovie.backdrop_path
+              backdrop_path: selectedMovie.backdrop_path,
+              release_date: selectedMovie.release_date
             } });
             }}
         >

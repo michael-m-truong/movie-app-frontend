@@ -9,6 +9,8 @@ export default defineConfig({
       "/auth/login": "http://localhost:3000",
       "/auth/logout": "http://localhost:3000",
       "/auth/isLoggedIn": "http://localhost:3000",
+      "/auth/update-number": "http://localhost:3000",
+
       "/movies/read-all": "http://localhost:3000",
       "/movies/add-favorite": "http://localhost:3000",
       "/movies/remove-favorite": "http://localhost:3000",

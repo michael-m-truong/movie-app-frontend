@@ -31,3 +31,11 @@ export const isLoggedInService = (data) => instance.post(
     //     withCredentials: true
     // }
 )
+
+export const updateNumberService = (data) => instance.post(
+    "auth/update-number",
+    data  // passed into body
+    // {
+    //     withCredentials: true
+    // }
+)
