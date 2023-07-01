@@ -1,6 +1,6 @@
 import axios from "axios";
 import { isLoggedInService, loginService, registerService, logoutService, updateNumberService} from "./authController";
-import { add_favoriteService, add_ratingService, add_watchlistService, edit_ratingService, getStats_Service, read_allService, remove_favoriteService, remove_ratingService, remove_watchlistService } from "./moviesController";
+import { add_favoriteService, add_ratingService, add_reminderService, add_watchlistService, edit_ratingService, getStats_Service, read_allService, remove_favoriteService, remove_ratingService, remove_reminderService, remove_watchlistService } from "./moviesController";
 
 export const instance = axios.create({
     //baseURL: "https://movie-app-backend-d7yq.onrender.com",
@@ -34,6 +34,9 @@ export const api = {
         add_watchlist: add_watchlistService,
         remove_watchlist: remove_watchlistService,
 
-        getStats: getStats_Service
+        getStats: getStats_Service,
+
+        add_reminder: add_reminderService,
+        remove_reminder: remove_reminderService,
     }
 }

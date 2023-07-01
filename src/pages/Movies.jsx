@@ -706,7 +706,7 @@ export function Movies({routerPage}) {
 
       <div className="modal-actions">
 
-      {(watchlist?.has(String(selectedMovie.id)) || watchlist?.has(String(selectedMovie.movieId)) ) ? (
+      {displayRemindMe(selectedMovie?.release_date) && ((watchlist?.has(String(selectedMovie.id)) || watchlist?.has(String(selectedMovie.movieId)) ) ? (
         <Button variant="contained" className="modal-action-button"
         onClick={() => {
           api.movies.remove_watchlist(
@@ -730,9 +730,9 @@ export function Movies({routerPage}) {
         >
           Create Reminder
         </Button>
-         {showReminderModal && <ReminderModal closeModal={handleClose} />}
+         {showReminderModal && <ReminderModal closeModal={handleClose} selectedMovie={selectedMovie}/>}
          </>
-      )}
+      ))}
 
 
       
@@ -764,7 +764,8 @@ export function Movies({routerPage}) {
                 vote_average: selectedMovie.vote_average,
                 poster_path: selectedMovie.poster_path,
                 overview: selectedMovie.overview,
-                backdrop_path: selectedMovie.backdrop_path
+                backdrop_path: selectedMovie.backdrop_path,
+                release_date: selectedMovie.release_date
               })
             );
             dispatch({ type: 'ADD_WATCHLIST', payload: {

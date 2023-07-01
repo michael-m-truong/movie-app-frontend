@@ -4,11 +4,13 @@ import Modal from 'react-bootstrap/Modal';
 import '../assets/css/reminderModal.css'
 import { useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
+import { api } from '../axios/axiosConfig';
 
 
-function ReminderModal({ closeModal }) {
+function ReminderModal({ closeModal, selectedMovie }) {
 
     const phoneNumber = useSelector(state => state.user.phoneNumber)
+    //TODO: useSelector reminders, if already in reminder do a modal that says are you sure
 
 
     const phoneExists= () => {
@@ -19,7 +21,28 @@ function ReminderModal({ closeModal }) {
         return true
     }
 
+    const createReminder = async () => {
+      await api.movies.add_reminder(JSON.stringify({
+        phoneNumber: phoneNumber,
+        title: selectedMovie.title,
+        movieId: selectedMovie.id,
+        genre: getGenreNames(selectedMovie.genre_ids),
+        vote_average: selectedMovie?.vote_average,
+        poster_path: selectedMovie.poster_path,
+        overview: selectedMovie.overview,
+        backdrop_path: selectedMovie.backdrop_path,
+        release_date: selectedMovie.release_date
+      }))
+    }
 
+    const removeReminder = async () => {
+      await api.movies.add_reminder(JSON.stringify({
+        phoneNumber: phoneNumber,
+        movieId: selectedMovie.id,
+      }))
+    }
+
+    //if not in reminders, return this
     return (
       <>
         <Modal show={true} onHide={closeModal}>
@@ -27,7 +50,7 @@ function ReminderModal({ closeModal }) {
             <Modal.Title>Set phone reminder</Modal.Title>
           </Modal.Header>
           
-          {phoneExists() ?  <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body> 
+          {phoneExists() ?  <Modal.Body>You will be notified via text message when the movie comes out!</Modal.Body> 
           
           :
           <Modal.Body>Whoops! Look like you don't have a phone number attached to the profile.<br/><br/>Go to the profile button and add your phone number under 'Edit Profile'</Modal.Body>
@@ -38,7 +61,7 @@ function ReminderModal({ closeModal }) {
             <Button variant="secondary" onClick={closeModal}>
               Close
             </Button>
-            <Button variant="primary" onClick={closeModal}>
+            <Button variant="primary" onClick={async () => {await createReminder(); closeModal()}}>
               Save Changes
             </Button>
           </Modal.Footer>

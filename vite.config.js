@@ -21,6 +21,8 @@ export default defineConfig({
       "/movies/remove-watchlist": "http://localhost:3000",
       "/movies/now-playing": "http://localhost:3000",
       "/movies/discover-stats": "http://localhost:3000",
+      "/movies/add-reminder": "http://localhost:3000",
+      "/movies/remove-reminder": "http://localhost:3000",
     },
   },
   plugins: [react()],  //need this for some rzn

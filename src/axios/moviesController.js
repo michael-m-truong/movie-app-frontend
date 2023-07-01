@@ -44,3 +44,13 @@ export const getStats_Service = () => instance.get(
     "movies/discover-stats",
     null
 )
+
+export const add_reminderService = (data) => instance.post(
+    "movies/add-reminder", 
+    data,
+)
+
+export const remove_reminderService = (data) => instance.post(
+    "movies/remove-reminder", 
+    data,
+)
