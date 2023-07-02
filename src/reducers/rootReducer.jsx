@@ -4,6 +4,7 @@ import favoritesReducer from './favoritesReducer';
 import searchReducer from './searchReducer';
 import ratingsReducer from './ratingsReducer';
 import watchlistReducer from './watchlistReducer';
+import remindersReducer from './remindersReducer';
 //import currentPageReduccer from './currentPageReducer'
 
 
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
   favorites: favoritesReducer,
   searchResults: searchReducer,
   ratings: ratingsReducer,
-  watchlist: watchlistReducer
+  watchlist: watchlistReducer,
+  reminders: remindersReducer
   //currentPage: currentPageReduccer
 });
 

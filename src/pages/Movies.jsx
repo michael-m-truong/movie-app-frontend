@@ -48,6 +48,7 @@ export function Movies({routerPage}) {
   const favorites = useSelector(state => state.favorites.favorites);
   const ratings = useSelector(state => state.ratings.ratings);
   const watchlist = useSelector(state => state.watchlist.watchlist);
+  const reminders = useSelector(state => state.reminders.reminders);
   const searchResults = useSelector(state => state.searchResults.searchResults)
   const dispatch = useDispatch();
   const location = useLocation();
@@ -409,7 +410,19 @@ export function Movies({routerPage}) {
         setMovies(ratingsList);
       }
     }
-  }, [favorites, ratings, watchlist, routerPage])
+    if (routerPage === "reminders") {
+      routerPage_ref.current = routerPage
+      // console.log(favorites)
+      // console.log(ratings)
+      // console.log(Object.values(favorites))
+      dispatch({ type: "CLEAR_SEARCH", payload: null });
+      if (favorites) {
+        const remindersList = Array.from(reminders.values());
+        console.log(remindersList)
+        setMovies(remindersList);
+      }
+    }
+  }, [favorites, ratings, watchlist, routerPage, reminders])
 
   useEffect(() => {
     console.log("HEREEEEEEE")
@@ -510,7 +523,7 @@ export function Movies({routerPage}) {
       html.offsetHeight
     );
     const windowBottom = windowHeight + window.scrollY;
-    if (windowBottom >= docHeight - 1 && !loadFlag.current && !['watchlist', 'favorites', 'ratings', 'discover'].includes(routerPage_ref.current)) {
+    if (windowBottom >= docHeight - 1 && !loadFlag.current && !['watchlist', 'favorites', 'ratings', 'discover', 'reminders'].includes(routerPage_ref.current)) {
       console.log(routerPage_ref.current)
       currentPage_ref.current = currentPage_ref.current + 1
       await loadMoreMovies()
@@ -706,16 +719,17 @@ export function Movies({routerPage}) {
 
       <div className="modal-actions">
 
-      {displayRemindMe(selectedMovie?.release_date) && ((watchlist?.has(String(selectedMovie.id)) || watchlist?.has(String(selectedMovie.movieId)) ) ? (
+      {displayRemindMe(selectedMovie?.release_date) && ((reminders?.has(String(selectedMovie.id)) || reminders?.has(String(selectedMovie.movieId)) ) ? (
         <Button variant="contained" className="modal-action-button"
         onClick={() => {
-          api.movies.remove_watchlist(
+          api.movies.remove_reminder(
             JSON.stringify({
               movieId: (selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId),
+              title: selectedMovie.title
             })
           )
-          dispatch({ type: 'REMOVE_WATCHLIST', payload: {movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId))} });
-          if (routerPage === "watchlist") {
+          dispatch({ type: 'REMOVE_REMINDER', payload: {movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId))} });
+          if (routerPage === "reminders") {
             closeModal()
           }
         }}>

@@ -40,7 +40,7 @@ export function Header({ authUser }) {
     if (currentItem) {
       currentItem.parentElement.classList.add("selected");
     }
-  }, []);
+  }, );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -184,6 +184,11 @@ const AuthenticatedLinks = () => {
             <li className="nav-item top">
               <Link to="/ratings" className="dropdown-link">
                 My Ratings
+              </Link>
+            </li>
+            <li className="nav-item top">
+              <Link to="/reminders" className="dropdown-link">
+                My Reminders
               </Link>
             </li>
           </ul>
