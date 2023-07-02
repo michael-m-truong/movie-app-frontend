@@ -575,6 +575,8 @@ export function Movies({routerPage}) {
   };
 
   const displayRemindMe = (date) => {
+    console.log(selectedMovie)
+    console.log(reminders)
     let currentDate = new Date();
     const releaseDate = new Date(date)
     return currentDate < releaseDate
@@ -728,7 +730,7 @@ export function Movies({routerPage}) {
               title: selectedMovie.title
             })
           )
-          dispatch({ type: 'REMOVE_REMINDER', payload: {movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId))} });
+          dispatch({ type: 'REMOVE_REMINDERS', payload: {movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId))} });
           if (routerPage === "reminders") {
             closeModal()
           }

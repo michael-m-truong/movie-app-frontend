@@ -5,10 +5,16 @@ const initialState = {
   const remindersReducer = (state = initialState, action) => {
     switch (action.type) {
       	case 'INITIALIZE_REMINDERS':
-			console.log(action.payload)
+            const remindersMap = action.payload.reduce((result, item) => {
+                const { movieId, ...rest } = item;
+                rest.movieId = movieId;
+                result.set(String(movieId), rest);
+                return result;
+              }, new Map());              
+            console.log(remindersMap)
 			return {
 				...state,
-				reminders: new Map(action.payload) // Initialize reminders with the provided Map
+				reminders: remindersMap // Initialize reminders with the provided Map
 			};
       	case 'ADD_REMINDERS':
 			console.log(action.payload)
