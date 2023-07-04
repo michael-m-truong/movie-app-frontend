@@ -685,13 +685,18 @@ export function Movies({routerPage}) {
                         poster_path: selectedMovie.poster_path,
                         vote_average: selectedMovie.vote_average,
                         overview: selectedMovie.overview,
-                        backdrop_path: selectedMovie.backdrop_path} });
+                        backdrop_path: selectedMovie.backdrop_path,
+                        release_date: selectedMovie.release_date,
+                        dateAdded: Date.now()
+                      } });
+                      dispatch({ type: 'UPDATE_FAVORITE_WITH_RATING', payload: { movieId, ratingValue } });
                       if (value === null) {
                         await api.movies.add_rating(JSON.stringify({movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)), ratingValue: newValue, title: selectedMovie.title,
                           genre: getGenreNames(selectedMovie.genre_ids),
                           poster_path: selectedMovie.poster_path,
                           overview: selectedMovie.overview,
                           vote_average: selectedMovie.vote_average,
+                          release_date: selectedMovie.release_date,
                           backdrop_path: selectedMovie.backdrop_path}))
                       }
                       else {
@@ -781,7 +786,7 @@ export function Movies({routerPage}) {
                 poster_path: selectedMovie.poster_path,
                 overview: selectedMovie.overview,
                 backdrop_path: selectedMovie.backdrop_path,
-                release_date: selectedMovie.release_date
+                release_date: selectedMovie.release_date,
               })
             );
             dispatch({ type: 'ADD_WATCHLIST', payload: {
@@ -792,7 +797,8 @@ export function Movies({routerPage}) {
               poster_path: selectedMovie.poster_path,
               overview: selectedMovie.overview,
               backdrop_path: selectedMovie.backdrop_path,
-              release_date: selectedMovie.release_date
+              release_date: selectedMovie.release_date,
+              dateAdded: Date.now()
             } });
             }}
         >
@@ -830,7 +836,8 @@ export function Movies({routerPage}) {
                 poster_path: selectedMovie.poster_path,
                 overview: selectedMovie.overview,
                 vote_average: selectedMovie.vote_average,
-                backdrop_path: selectedMovie.backdrop_path
+                backdrop_path: selectedMovie.backdrop_path,
+                release_date: selectedMovie.release_date,
               })
             );
             dispatch({ type: 'ADD_FAVORITE', payload: {
@@ -840,7 +847,9 @@ export function Movies({routerPage}) {
               poster_path: selectedMovie.poster_path,
               overview: selectedMovie.overview,
               vote_average: selectedMovie.vote_average,
-              backdrop_path: selectedMovie.backdrop_path
+              backdrop_path: selectedMovie.backdrop_path,
+              release_date: selectedMovie.release_date,
+              dateAdded: Date.now()
             } });
             }}
         >
@@ -857,6 +866,7 @@ export function Movies({routerPage}) {
             })
           )
           dispatch({ type: 'REMOVE_RATING', payload: {movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId))} });
+          dispatch({ type: 'REMOVE_RATING_FROM_FAVORITES', payload: { movieId } });
           if (routerPage === "ratings") {
             closeModal()
           }

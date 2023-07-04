@@ -41,10 +41,15 @@ async function authUser(dispatch) {
 async function getUserMovieData(dispatch) {
   try {
     let getUserMovieData_response = await api.movies.read_all()
-    dispatch({ type: "INITIALIZE_FAVORITES", payload: Object.entries(getUserMovieData_response.data.user.favorites)})
+    console.log("here")
     dispatch({ type: "INITIALIZE_RATINGS", payload: Object.entries(getUserMovieData_response.data.user.ratings)})
+    dispatch({ type: "INITIALIZE_FAVORITES", payload: Object.entries(getUserMovieData_response.data.user.favorites)})
     dispatch({ type: "INITIALIZE_WATCHLIST", payload: Object.entries(getUserMovieData_response.data.user.watchlist)})
     dispatch({ type: "INITIALIZE_REMINDERS", payload: getUserMovieData_response.data.user.reminders})
+
+    const ratingsMap = new Map(Object.entries(getUserMovieData_response.data.user.ratings));
+    dispatch({ type: 'UPDATE_FAVORITES_WITH_RATINGS', payload: ratingsMap });
+
   }
   catch (error) {
     console.log(error)

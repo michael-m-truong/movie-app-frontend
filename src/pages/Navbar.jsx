@@ -5,15 +5,16 @@ import { store } from '../App';
 import { api } from "../axios/axiosConfig";
 import FilterOptions from "../components/FilterOptions";
 import FilterOptions_MUI from "../components/FilterOptions_MUI";
+import FilterOptions_User from "../components/FilterOptions_User";
 
 export function Navbar() {
   const location = useLocation();
-  const isDiscoverPage = location.pathname === '/discover' || location.pathname === '/' || location.pathname === '/watchlist' || location.pathname === '/ratings' || location.pathname === '/favorites' || location.pathname === '/reminders';
+  const isUserPage = location.pathname === '/watchlist' || location.pathname === '/ratings' || location.pathname === '/favorites' || location.pathname === '/reminders';
 
   return (
     <div className="navbar" id="navbar">
       <ul className="nav-list">
-      {isDiscoverPage && <FilterOptions />}
+      {isUserPage ? <FilterOptions_User/> : <FilterOptions />}
         {/* <li className="nav-item">
           <Link to="/discover" className="nav-link">
             Discover

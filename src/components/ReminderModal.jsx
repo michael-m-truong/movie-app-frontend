@@ -66,7 +66,8 @@ function ReminderModal({ closeModal, selectedMovie }) {
         poster_path: selectedMovie.poster_path,
         overview: selectedMovie.overview,
         backdrop_path: selectedMovie.backdrop_path,
-        release_date: selectedMovie.release_date
+        release_date: selectedMovie.release_date,
+        dateAdded: Date.now()
       } });
     }
 
