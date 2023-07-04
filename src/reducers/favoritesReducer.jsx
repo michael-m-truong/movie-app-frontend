@@ -17,7 +17,8 @@ const initialState = {
 				favorites: new Map(action.payload), // Initialize favorites with the provided Map
 				originalFavorites: new Map(action.payload)
 			};
-		case 'UPDATE_FAVORITES_WITH_RATINGS':
+		case 'UPDATE_OTHER_LISTS_WITH_RATINGS':
+			console.log("hereeeeeee")
 			const ratings = new Map(action.payload);
 			const updatedFavorites = new Map(state.favorites);
 		
@@ -32,7 +33,7 @@ const initialState = {
 				...state,
 				favorites: updatedFavorites,
 			};
-		case 'UPDATE_FAVORITE_WITH_RATING':
+		case 'UPDATE_OTHER_LISTS_WITH_RATING':
 			const { movieId, ratingValue } = action.payload;
 		
 			if (state.favorites.has(movieId)) {
@@ -47,7 +48,7 @@ const initialState = {
 			}
 		
 			return state;
-		case 'REMOVE_RATING_FROM_FAVORITES':
+		case 'REMOVE_RATING_FROM_OTHER_LISTS':
 			const movieIdToRemove = action.payload;
 		
 			if (state.favorites.has(movieIdToRemove)) {
@@ -81,7 +82,12 @@ const initialState = {
 		case 'FILTER':
 			console.log(state.favorites)
 			let filteredFavorites = new Map(state.originalFavorites);
-			let [filters, minYourScore, minScore, selectedGenres, earliestDate, latestDate] = action.payload
+			let [filters, minYourScore, minScore, selectedGenres, earliestDate, latestDate, locationPathname] = action.payload
+			if (locationPathname != '/favorites') {
+				return {
+					...state
+				}
+			}
 			filters.forEach((filter) => {
 				switch (filter) {
 				case 'FILTER_BY_DATE_ASCENDING':
@@ -181,11 +187,11 @@ const initialState = {
 				activeFilters: action.payload,
 			};
 		case 'RESET_FILTERS':
-		return {
-			...state,
-			favorites: new Map(state.originalFavorites),
-			activeFilters: [],
-		};
+			return {
+				...state,
+				favorites: new Map(state.originalFavorites),
+				activeFilters: [],
+			};
 
 		default:
 			return state;

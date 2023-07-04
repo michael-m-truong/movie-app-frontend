@@ -689,7 +689,7 @@ export function Movies({routerPage}) {
                         release_date: selectedMovie.release_date,
                         dateAdded: Date.now()
                       } });
-                      dispatch({ type: 'UPDATE_FAVORITE_WITH_RATING', payload: { movieId, ratingValue } });
+                      dispatch({ type: 'UPDATE_OTHER_LISTS_WITH_RATING', payload: { movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)), newValue } });  //fix
                       if (value === null) {
                         await api.movies.add_rating(JSON.stringify({movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)), ratingValue: newValue, title: selectedMovie.title,
                           genre: getGenreNames(selectedMovie.genre_ids),
@@ -866,7 +866,7 @@ export function Movies({routerPage}) {
             })
           )
           dispatch({ type: 'REMOVE_RATING', payload: {movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId))} });
-          dispatch({ type: 'REMOVE_RATING_FROM_FAVORITES', payload: { movieId } });
+          dispatch({ type: 'REMOVE_RATING_FROM_OTHER_LISTS', payload: { movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)) } });
           if (routerPage === "ratings") {
             closeModal()
           }

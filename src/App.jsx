@@ -48,7 +48,7 @@ async function getUserMovieData(dispatch) {
     dispatch({ type: "INITIALIZE_REMINDERS", payload: getUserMovieData_response.data.user.reminders})
 
     const ratingsMap = new Map(Object.entries(getUserMovieData_response.data.user.ratings));
-    dispatch({ type: 'UPDATE_FAVORITES_WITH_RATINGS', payload: ratingsMap });
+    dispatch({ type: 'UPDATE_OTHER_LISTS_WITH_RATINGS', payload: ratingsMap });
 
   }
   catch (error) {

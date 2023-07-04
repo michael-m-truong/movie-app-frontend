@@ -28,7 +28,7 @@ const genreMappings = {
   37: "Western",
 };
 
-const FilterOptions_User = () => {
+const FilterOptions_User = ({locationPathname}) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [sortBy, setSortBy] = useState(""); // Initialize sortBy state
@@ -154,7 +154,7 @@ const FilterOptions_User = () => {
     }
   //filter_sortby()
 
-  }, [location, favorites]);
+  }, [location, favorites, watchlist, ratings, reminders]);
 
   useEffect(() => {
     // Check if it's the first render
@@ -221,7 +221,7 @@ const FilterOptions_User = () => {
     const formattedLatestDate = String(latestDate?.toISOString().split('T')[0].slice(0, -5) + '12-31')
     console.log(new Date(formattedEarliestDate))
     console.log(getGenreNames(selectedGenres))
-    dispatch({ type: 'FILTER', payload: [filters, minYourScore, minScore, getGenreNames(selectedGenres), new Date(formattedEarliestDate), new Date(formattedLatestDate)]});
+    dispatch({ type: 'FILTER', payload: [filters, minYourScore, minScore, getGenreNames(selectedGenres), new Date(formattedEarliestDate), new Date(formattedLatestDate), locationPathname]});
   }
 
   const getGenreNames = (genreIds) => {

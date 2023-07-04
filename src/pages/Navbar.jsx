@@ -14,7 +14,7 @@ export function Navbar() {
   return (
     <div className="navbar" id="navbar">
       <ul className="nav-list">
-      {isUserPage ? <FilterOptions_User/> : <FilterOptions />}
+      {isUserPage ? <FilterOptions_User locationPathname={location.pathname}/> : <FilterOptions />}
         {/* <li className="nav-item">
           <Link to="/discover" className="nav-link">
             Discover
