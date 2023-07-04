@@ -15,7 +15,7 @@ export function Register() {
     const handleRegister = async (e) => {
         // prevent form from refreshing whole page
         e.preventDefault();
-        alert("username: " + username + " password: " + password)
+        //alert("username: " + username + " password: " + password)
         let data = {username: username, password: password}
         data = JSON.stringify(data)
         console.log(data)

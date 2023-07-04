@@ -157,6 +157,7 @@ const AuthenticatedLinks = () => {
 
   const logout = async () => {
     await store.dispatch({ type: "LOGGED_OUT"})
+    await store.dispatch({type: "CLEAR_REDUCER"})
     await api.auth.logout()
     navigate('/')
 }

@@ -194,6 +194,12 @@ const initialState = {
 				watchlist: new Map(state.originalWatchlist),
 				activeFilters: [],
 			};
+		case 'CLEAR_REDUCER':
+			return {
+				...state,
+				watchlist: new Map(),
+				originalWatchlist: new Map()
+			}
 		default:
 			return state;
 		}

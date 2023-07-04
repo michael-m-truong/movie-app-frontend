@@ -146,6 +146,12 @@ const initialState = {
 			ratings: new Map(state.originalRatings),
 			activeFilters: [],
 		};
+		case 'CLEAR_REDUCER':
+			return {
+				...state,
+				ratings: new Map(),
+				originalRatings: new Map()
+			}
 		default:
 			return state;
 		}

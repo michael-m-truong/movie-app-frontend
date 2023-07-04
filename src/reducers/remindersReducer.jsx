@@ -198,6 +198,12 @@ const initialState = {
 				reminders: new Map(state.originalReminders),
 				activeFilters: [],
 			};
+		case 'CLEAR_REDUCER':
+			return {
+				...state,
+				reminders: new Map(),
+				originalReminders: new Map()
+			}
 		default:
 			return state;
 		}

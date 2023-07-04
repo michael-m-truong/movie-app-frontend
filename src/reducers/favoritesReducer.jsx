@@ -192,7 +192,12 @@ const initialState = {
 				favorites: new Map(state.originalFavorites),
 				activeFilters: [],
 			};
-
+		case 'CLEAR_REDUCER':
+			return {
+				...state,
+				favorites: new Map(),
+				originalFavorites: new Map()
+			}
 		default:
 			return state;
 		}
