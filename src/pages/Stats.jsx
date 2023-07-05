@@ -43,7 +43,7 @@ export function Stats({routerPage}) {
   const ratings = useSelector(state => state.ratings.ratings);
   const watchlist = useSelector(state => state.watchlist.watchlist);
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     
     const fetchStats= async () =>{
@@ -74,9 +74,20 @@ export function Stats({routerPage}) {
         console.log("Error fetching movie data:", error);
       }
     }
-    fetchStats()
-  }, [])
+
+    fetchStats() 
     
+    const eventSource = new EventSource('movies/discover-stats-updates');
+    eventSource.addEventListener("stats_updated", () => {
+      console.log("here")
+        fetchStats()
+    });
+    return () => {
+      eventSource.close(); // Close the EventSource connection on component unmount
+    };
+
+  }, [])
+
 
   const getLabelText = (value) => {
     if (value === null) return
