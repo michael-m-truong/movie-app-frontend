@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, Fragment } from "react";
-import { Link, Route, Routes, useLocation } from "react-router-dom";
+import { Link, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../assets/css/movies.css";
 import Button from '@mui/material/Button';
@@ -55,6 +55,8 @@ export function Movies({routerPage}) {
   const loadFlag = useRef(false);
   const routerPage_ref = useRef(routerPage)
   const [showReminderModal, setShowReminderModal] = useState(false);
+  const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+  const navigate = useNavigate()
 
   console.log(requestUrl)
   console.log(routerPage)
@@ -679,6 +681,9 @@ export function Movies({routerPage}) {
                     getLabelText={(value) => getLabelText(value)}
                     max={10}
                     onChange={async (event, newValue) => {
+                      if (!isLoggedIn) {
+                        navigate('/login')
+                      }
                       setValue(newValue);
                       dispatch({ type: 'ADD_RATING', payload: {movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)), ratingValue: newValue, title: selectedMovie.title,
                         genre: getGenreNames(selectedMovie.genre_ids),
@@ -729,6 +734,9 @@ export function Movies({routerPage}) {
       {displayRemindMe(selectedMovie?.release_date) && ((reminders?.has(String(selectedMovie.id)) || reminders?.has(String(selectedMovie.movieId)) ) ? (
         <Button variant="contained" className="modal-action-button"
         onClick={() => {
+          if (!isLoggedIn) {
+            navigate('/login')
+          }
           api.movies.remove_reminder(
             JSON.stringify({
               movieId: (selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId),
@@ -760,6 +768,9 @@ export function Movies({routerPage}) {
       {(watchlist?.has(String(selectedMovie.id)) || watchlist?.has(String(selectedMovie.movieId)) ) ? (
         <Button variant="contained" className="modal-action-button"
         onClick={() => {
+          if (!isLoggedIn) {
+            navigate('/login')
+          }
           api.movies.remove_watchlist(
             JSON.stringify({
               movieId: (selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId),
@@ -777,6 +788,9 @@ export function Movies({routerPage}) {
           variant="contained"
           className="modal-action-button"
           onClick={() => {
+            if (!isLoggedIn) {
+              navigate('/login')
+            }
             api.movies.add_watchlist(
               JSON.stringify({
                 title: selectedMovie.title,
@@ -811,6 +825,9 @@ export function Movies({routerPage}) {
         {(favorites?.has(String(selectedMovie.id)) || favorites?.has(String(selectedMovie.movieId)) ) ? (
         <Button variant="contained" className="modal-action-button"
         onClick={() => {
+          if (!isLoggedIn) {
+            navigate('/login')
+          }
           api.movies.remove_favorite(
             JSON.stringify({
               movieId: (selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId),
@@ -828,6 +845,9 @@ export function Movies({routerPage}) {
           variant="contained"
           className="modal-action-button"
           onClick={() => {
+            if (!isLoggedIn) {
+              navigate('/login')
+            }
             api.movies.add_favorite(
               JSON.stringify({
                 title: selectedMovie.title,
@@ -860,6 +880,9 @@ export function Movies({routerPage}) {
       {(ratings?.has(String(selectedMovie.id)) || ratings?.has(String(selectedMovie.movieId)) ) ? (
         <Button variant="contained" className="modal-action-button"
         onClick={() => {
+          if (!isLoggedIn) {
+            navigate('/login')
+          }
           api.movies.remove_rating(
             JSON.stringify({
               movieId: (selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId),

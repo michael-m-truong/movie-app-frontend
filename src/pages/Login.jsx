@@ -8,6 +8,7 @@ import Cookies from "universal-cookie";
 import axios from 'axios';
 import { store } from '../App';
 import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 
 export function Login() {
 
@@ -16,6 +17,13 @@ export function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loginCheck, setLoginCheck] = useState();
+    const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+    
+    useEffect(()=> {
+      if (isLoggedIn) {
+        navigate('/')
+      }
+    })
 
     const getUserMovieData = async () => {
       try {

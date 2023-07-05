@@ -21,6 +21,13 @@ export function Profile() {
     const username = useSelector(state => state.user.username);
     const user_phoneNumber = useSelector(state => state.user.phoneNumber);
     const user = useSelector(state => state.user);
+    const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+    
+    useEffect(()=> {
+      if (!isLoggedIn) {
+        navigate('/')
+      }
+    })
 
     console.log(user)
 

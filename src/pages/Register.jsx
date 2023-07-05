@@ -11,6 +11,13 @@ export function Register() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [registerCheck, setRegisterCheck] = useState();
+    const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+    
+    useEffect(()=> {
+      if (isLoggedIn) {
+        navigate('/')
+      }
+    })
 
     const handleRegister = async (e) => {
         // prevent form from refreshing whole page

@@ -79,7 +79,6 @@ export function Stats({routerPage}) {
     
     const eventSource = new EventSource('movies/discover-stats-updates');
     eventSource.addEventListener("stats_updated", () => {
-      console.log("here")
         fetchStats()
     });
     return () => {
