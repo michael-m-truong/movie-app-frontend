@@ -686,7 +686,7 @@ export function Movies({routerPage}) {
                       }
                       setValue(newValue);
                       dispatch({ type: 'ADD_RATING', payload: {movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)), ratingValue: newValue, title: selectedMovie.title,
-                        genre: getGenreNames(selectedMovie.genre_ids),
+                        genre: selectedMovie?.genre_ids ? getGenreNames(selectedMovie.genre_ids) : selectedMovie.genre,
                         poster_path: selectedMovie.poster_path,
                         vote_average: selectedMovie.vote_average,
                         overview: selectedMovie.overview,
@@ -697,7 +697,7 @@ export function Movies({routerPage}) {
                       dispatch({ type: 'UPDATE_OTHER_LISTS_WITH_RATING', payload: { movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)), newValue } });  //fix
                       if (value === null) {
                         await api.movies.add_rating(JSON.stringify({movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)), ratingValue: newValue, title: selectedMovie.title,
-                          genre: getGenreNames(selectedMovie.genre_ids),
+                          genre: selectedMovie?.genre_ids ? getGenreNames(selectedMovie.genre_ids) : selectedMovie.genre,
                           poster_path: selectedMovie.poster_path,
                           overview: selectedMovie.overview,
                           vote_average: selectedMovie.vote_average,
@@ -795,7 +795,7 @@ export function Movies({routerPage}) {
               JSON.stringify({
                 title: selectedMovie.title,
                 movieId: (selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId),
-                genre: getGenreNames(selectedMovie.genre_ids),
+                genre: selectedMovie?.genre_ids ? getGenreNames(selectedMovie.genre_ids) : selectedMovie.genre,
                 vote_average: selectedMovie.vote_average,
                 poster_path: selectedMovie.poster_path,
                 overview: selectedMovie.overview,
@@ -806,7 +806,7 @@ export function Movies({routerPage}) {
             dispatch({ type: 'ADD_WATCHLIST', payload: {
               title: selectedMovie.title,
               movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)),
-              genre: getGenreNames(selectedMovie.genre_ids),
+              genre: selectedMovie?.genre_ids ? getGenreNames(selectedMovie.genre_ids) : selectedMovie.genre,
               vote_average: selectedMovie.vote_average,
               poster_path: selectedMovie.poster_path,
               overview: selectedMovie.overview,
@@ -852,7 +852,7 @@ export function Movies({routerPage}) {
               JSON.stringify({
                 title: selectedMovie.title,
                 movieId: (selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId),
-                genre: getGenreNames(selectedMovie.genre_ids),
+                genre: selectedMovie?.genre_ids ? getGenreNames(selectedMovie.genre_ids) : selectedMovie.genre,
                 poster_path: selectedMovie.poster_path,
                 overview: selectedMovie.overview,
                 vote_average: selectedMovie.vote_average,
@@ -863,7 +863,7 @@ export function Movies({routerPage}) {
             dispatch({ type: 'ADD_FAVORITE', payload: {
               title: selectedMovie.title,
               movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)),
-              genre: getGenreNames(selectedMovie.genre_ids),
+              genre: selectedMovie?.genre_ids ? getGenreNames(selectedMovie.genre_ids) : selectedMovie.genre,
               poster_path: selectedMovie.poster_path,
               overview: selectedMovie.overview,
               vote_average: selectedMovie.vote_average,

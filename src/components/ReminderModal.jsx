@@ -50,7 +50,7 @@ function ReminderModal({ closeModal, selectedMovie }) {
         phoneNumber: phoneNumber,
         title: selectedMovie.title,
         movieId: (selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId),
-        genre: getGenreNames(selectedMovie.genre_ids),
+        genre: selectedMovie?.genre_ids ? getGenreNames(selectedMovie.genre_ids) : selectedMovie.genre,
         vote_average: selectedMovie?.vote_average,
         poster_path: selectedMovie.poster_path,
         overview: selectedMovie.overview,
@@ -61,7 +61,7 @@ function ReminderModal({ closeModal, selectedMovie }) {
       dispatch({ type: 'ADD_REMINDERS', payload: {
         title: selectedMovie.title,
         movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)),
-        genre: getGenreNames(selectedMovie.genre_ids),
+        genre: selectedMovie?.genre_ids ? getGenreNames(selectedMovie.genre_ids) : selectedMovie.genre,
         vote_average: selectedMovie.vote_average,
         poster_path: selectedMovie.poster_path,
         overview: selectedMovie.overview,
