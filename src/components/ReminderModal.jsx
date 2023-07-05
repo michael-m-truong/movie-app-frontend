@@ -49,7 +49,7 @@ function ReminderModal({ closeModal, selectedMovie }) {
       api.movies.add_reminder(JSON.stringify({
         phoneNumber: phoneNumber,
         title: selectedMovie.title,
-        movieId: selectedMovie.id,
+        movieId: (selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId),
         genre: getGenreNames(selectedMovie.genre_ids),
         vote_average: selectedMovie?.vote_average,
         poster_path: selectedMovie.poster_path,
@@ -60,7 +60,7 @@ function ReminderModal({ closeModal, selectedMovie }) {
 
       dispatch({ type: 'ADD_REMINDERS', payload: {
         title: selectedMovie.title,
-        movieId: String(selectedMovie.id),
+        movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)),
         genre: getGenreNames(selectedMovie.genre_ids),
         vote_average: selectedMovie.vote_average,
         poster_path: selectedMovie.poster_path,

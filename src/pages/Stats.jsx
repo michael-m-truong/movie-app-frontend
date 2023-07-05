@@ -259,7 +259,7 @@ export function Stats({routerPage}) {
             api.movies.add_watchlist(
               JSON.stringify({
                 title: selectedMovie.title,
-                movieId: selectedMovie.id,
+                movieId: (selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId),
                 genre: getGenreNames(selectedMovie.genre_ids),
                 vote_average: selectedMovie.vote_average,
                 poster_path: selectedMovie.poster_path,
@@ -269,7 +269,7 @@ export function Stats({routerPage}) {
             );
             dispatch({ type: 'ADD_WATCHLIST', payload: {
               title: selectedMovie.title,
-              movieId: String(selectedMovie.id),
+              movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)),
               genre: getGenreNames(selectedMovie.genre_ids),
               vote_average: selectedMovie.vote_average,
               poster_path: selectedMovie.poster_path,
@@ -305,7 +305,7 @@ export function Stats({routerPage}) {
             api.movies.add_favorite(
               JSON.stringify({
                 title: selectedMovie.title,
-                movieId: selectedMovie.id,
+                movieId: (selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId),
                 genre: getGenreNames(selectedMovie.genre_ids),
                 poster_path: selectedMovie.poster_path,
                 overview: selectedMovie.overview,
@@ -315,7 +315,7 @@ export function Stats({routerPage}) {
             );
             dispatch({ type: 'ADD_FAVORITE', payload: {
               title: selectedMovie.title,
-              movieId: String(selectedMovie.id),
+              movieId: String((selectedMovie?.id ? selectedMovie.id : selectedMovie.movieId)),
               genre: getGenreNames(selectedMovie.genre_ids),
               poster_path: selectedMovie.poster_path,
               overview: selectedMovie.overview,
