@@ -4,6 +4,8 @@ import '../assets/css/Form.css'
 import { useNavigate } from "react-router-dom"
 import { api } from '../axios/axiosConfig';
 import { useState } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 
 export function Register() {
 
